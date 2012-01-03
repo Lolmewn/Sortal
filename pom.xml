@@ -3,26 +3,26 @@
   <groupId>Sortal</groupId>
   <artifactId>Sortal</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-      <repositories>
+    <repositories>
         <repository>
             <id>spout-repo</id>
             <url>http://nexus.getspout.org/content/groups/public/</url>
         </repository>
     </repositories>
-      <build>
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.0.2</version>
                 <configuration>
-                    <source>1.5</source> 
+                    <source>1.5</source>
                     <target>1.5</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-  <dependencies>
+    <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
