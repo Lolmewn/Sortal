@@ -64,7 +64,7 @@ public class Main extends JavaPlugin{
 	//Settings
 	public boolean usePerm;
 	public boolean use3Co;
-	public boolean useiCo;
+	public boolean useiCo; 
 	public boolean useBOSE;
 	public String noPerm;
 	public String warpCreateNameForgotten;

@@ -34,7 +34,7 @@ public class SPlayerListener extends PlayerListener{
 				event.setCancelled(true);
 			}
 			return;
-		}
+		} 
 		if(!a.equals(Action.RIGHT_CLICK_BLOCK)){
 			return;
 		}
