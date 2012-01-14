@@ -43,7 +43,7 @@ public class Warp{
 	 * Saves the warp
 	 */
 	public void saveWarp() {
-		if(!plugin.useSQL && !plugin.useMySQL){
+		//if(!plugin.useSQL && !plugin.useMySQL){
 			try {
 				if(!warps.exists()){
 					warps.createNewFile();
@@ -61,8 +61,8 @@ public class Warp{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		if(plugin.useSQL){
+		//}
+		/*if(plugin.useSQL){
 			plugin.sql.checkConnection();
 			plugin.sql.query("INSERT INTO Sortal (name, world, x,y,z,warp,cost) VALUES ('" + warp + "', '" + world + "', " + x + ", " + y + ", " + z + ", 1, 0;");
 			plugin.warp.put(warp(), new Warp(plugin, warp, world, x,y,z));
@@ -75,10 +75,10 @@ public class Warp{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 	}
 	public boolean delWarp(){
-		if(!plugin.useSQL && !plugin.useMySQL){
+		//if(!plugin.useSQL && !plugin.useMySQL){
 			try{
 				if(!warps.exists()){
 					warps.createNewFile();
@@ -103,28 +103,9 @@ public class Warp{
 				e.printStackTrace();
 				return false;
 			}
-		}
-		if(plugin.useSQL){
-			plugin.sql.checkConnection();
-			plugin.sql.query("DELETE FROM Sortal WHERE warp = '"+warp+ "';");
-			plugin.warp.remove(warp);
-			return true;
-		}
-		if(plugin.useMySQL){
-			plugin.mysql.checkConnection();
-			try {
-				plugin.mysql.query("DELETE FROM Sortal WHERE warp = '"+warp+ "';");
-			}  catch (Exception e) {
-				e.printStackTrace();
-				return false;
-			}
-			plugin.warp.remove(warp);
-			return true;
-		}
-		return false;
 	}
 	public boolean setCost(int cost){
-		if(!plugin.useSQL && !plugin.useMySQL){
+		//if(!plugin.useSQL && !plugin.useMySQL){//
 			try{
 				if(!warps.exists()){
 					warps.createNewFile();
@@ -150,8 +131,8 @@ public class Warp{
 				e.printStackTrace();
 				return false;
 			}
-		}
-		if(plugin.useSQL){
+		//}
+		/*if(plugin.useSQL){
 			plugin.sql.checkConnection();
 			plugin.sql.query("UPDATE Sortal SET cost = " + cost+ " WHERE warp = '"+warp+ "';");
 			return true;
@@ -164,7 +145,7 @@ public class Warp{
 				return false;
 			}
 			return true;
-		}
+		}*/
 	}
 	public int getCost(){
 		if(cost == 0){

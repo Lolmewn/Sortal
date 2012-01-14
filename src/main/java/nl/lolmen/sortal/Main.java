@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Logger;
-import nl.lolmen.database.MySQL;
-import nl.lolmen.database.SQLite;
+//import nl.lolmen.database.MySQL;
+//import nl.lolmen.database.SQLite;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -55,8 +55,8 @@ public class Main extends JavaPlugin{
 	public Warp Warps = new Warp(this);
 	public SBlockListener block = new SBlockListener(this);
 	public SPlayerListener player = new SPlayerListener(this);
-	public MySQL mysql;
-	public SQLite sql;
+	//public MySQL mysql;
+	//public SQLite sql;
 	
 	//Economy Plugins
 	public iConomy iCo;
@@ -77,8 +77,8 @@ public class Main extends JavaPlugin{
 	public String warpDeleted;
 	public String warpDoesNotExist;
 	public String notAplayer;
-	public boolean useSQL;
-	public boolean useMySQL;
+	//public boolean useSQL;
+	//public boolean useMySQL;
 	public String dbUser;
 	public String dbPass;
 	public String dbDB;
@@ -171,7 +171,7 @@ public class Main extends JavaPlugin{
 	}
 	
 	private void loadSigns() {
-		if(!useSQL && !useMySQL){
+		//if(!useSQL && !useMySQL){
 			try {
 				if(!locs.exists()){
 					locs.createNewFile();
@@ -190,8 +190,8 @@ public class Main extends JavaPlugin{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		if(useSQL){
+		//}
+		/*if(useSQL){
 			if(sql.checkConnection()){
 				ResultSet set = sql.query("SELECT * FROM Sortal WHERE warp = 0;");
 				if(!(set == null)){
@@ -234,7 +234,7 @@ public class Main extends JavaPlugin{
 					log.info(logPrefix + "a sign could not be loaded!");
 				}
 			}
-		}
+		}*/
 	}
 
 	private void processLocs(String str) {
@@ -283,7 +283,7 @@ public class Main extends JavaPlugin{
 	}
 
 	private void loadWarps() {
-		if(!useSQL && !useMySQL){
+		//if(!useSQL && !useMySQL){
 			try {
 				if(!warps.exists()){
 					warps.createNewFile();
@@ -305,8 +305,8 @@ public class Main extends JavaPlugin{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-		if(useSQL){
+		//}
+		/*if(useSQL){
 			if(sql.checkConnection()){
 				ResultSet set = sql.query("SELECT * FROM Sortal WHERE warp = 1;");
 				if(!(set == null)){
@@ -353,7 +353,7 @@ public class Main extends JavaPlugin{
 					log.info(logPrefix + "a warp could not be loaded!");
 				}
 			}
-		}
+		}*/
 
 		log.info(logPrefix + Integer.toString(warp.size()) + " warps loaded!");
 	}
@@ -442,7 +442,7 @@ public class Main extends JavaPlugin{
 	}
 
 	private void loadDB() {
-		if(!useMySQL && !useSQL){
+		/*if(!useMySQL && !useSQL){
 			return;
 		}
 		if(useMySQL && useSQL){
@@ -471,7 +471,7 @@ public class Main extends JavaPlugin{
 				log.severe(logPrefix + "MySQL connection failed");
 				useMySQL = false;
 			}
-		}
+		}*/
 	}
 
 
@@ -497,8 +497,8 @@ public class Main extends JavaPlugin{
 		warpDeleted = c.getString("warpDeleted", "Warp WARPNAME deleted!");
 		warpDoesNotExist = c.getString("warpDoesNotExist", "This warp does not exist!");
 		notAplayer = c.getString("notAplayer", "You must be a player to use this command!");
-		useSQL = c.getBoolean("useSQLite", false);
-		useMySQL = c.getBoolean("useMySQL", false);
+		//useSQL = c.getBoolean("useSQLite", false);
+		//useMySQL = c.getBoolean("useMySQL", false);
 		dbUser = c.getString("MySQL.username");
 		dbPass = c.getString("MySQL.password");
 		dbHost = c.getString("MySQL.host");
