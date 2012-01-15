@@ -95,7 +95,6 @@ public class Main extends JavaPlugin{
 	boolean converting;
 	HashMap<String, String> map = new HashMap<String, String>();
 
-	@Override
 	public void onDisable() {
 		log.info(logPrefix + "Disabled!");
 	}
@@ -120,7 +119,6 @@ public class Main extends JavaPlugin{
 		}
 	}
 
-	@Override
 	public void onEnable() {
 		start = System.nanoTime();
 		new File(maindir).mkdir();
