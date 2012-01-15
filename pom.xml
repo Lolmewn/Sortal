@@ -34,12 +34,4 @@
           <version>1.2.0-b000</version>
         </dependency>
     </dependencies>
-    <issueManagement>
-    	<system>Github</system>
-    	<url>https://github.com/Lolmen/Sortal/issues</url>
-    </issueManagement>
-    <ciManagement>
-    	<system>Jenkins</system>
-    	<url>http://77.251.20.228:8080</url>
-    </ciManagement>
 </project>
