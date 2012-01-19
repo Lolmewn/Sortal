@@ -33,8 +33,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.iConomy.iConomy;
-
 public class Main extends JavaPlugin{
 	
 	public Logger log = Logger.getLogger("Minecraft");
@@ -57,13 +55,11 @@ public class Main extends JavaPlugin{
 	//public SQLite sql;
 	
 	//Economy Plugins
-	public iConomy iCo;
+	//public iConomy iCo;
 	
 	//Settings
 	public boolean usePerm;
-	public boolean use3Co;
-	public boolean useiCo; 
-	public boolean useBOSE;
+	public boolean useVault;
 	public String noPerm;
 	public String warpCreateNameForgotten;
 	public String warpCreateCoordsForgotten;
@@ -423,19 +419,17 @@ public class Main extends JavaPlugin{
 
 	private void loadPlugins() {
 		Plugin test;
-		test = getServer().getPluginManager().getPlugin("iConomy");
-		if(iCo == null){
-			if(test != null){
-				if(useiCo){
-					iCo = (iConomy)test;
-					log.info("[Sortal] Hooked into iConomy!");
-					return;
-				}else{
-					log.info("[Sortal] iConomy found but not used due to settings");
-				}
+		test = getServer().getPluginManager().getPlugin("Vault");
+		if(test != null){
+			if(useVault){
+				log.info("[Sortal] Hooked into Vault!");
+				return;
+			}else{
+				log.info("[Sortal] iConomy found but not used due to settings");
 			}
 		}
 	}
+	
 
 	private void loadDB() {
 		/*if(!useMySQL && !useSQL){
@@ -478,10 +472,8 @@ public class Main extends JavaPlugin{
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		useVault = c.getBoolean("plugins.useVault");
 		usePerm = c.getBoolean("plugins.usePermissions", false);
-		use3Co = c.getBoolean("plugins.use3Co", false);
-		useiCo = c.getBoolean("plugins.useiConomy", false);
-		useBOSE = c.getBoolean("plugins.useBOSEconomy", false);
 		noPerm = c.getString("no-permissions", "You do not have permissions to do that!");
 		warpCreateNameForgotten = c.getString("warpCreateNameForgotten", "You must give a name to this warp!");
 		warpCreateCoordsForgotten = c.getString("warpCreateCoordsForgotten", "You must specify the coords for this warp!");
@@ -517,8 +509,7 @@ public class Main extends JavaPlugin{
 				try {
 					File efile = new File(maindir, "settings.yml");
 					
-					InputStream in = this.getClass().getClassLoader()
-							.getResourceAsStream("settings.yml");
+					InputStream in = this.getClass().getClassLoader().getResourceAsStream("settings.yml");
 					OutputStream out = new BufferedOutputStream(new FileOutputStream(efile));
 					int c;
 					while((c = in.read()) != -1){

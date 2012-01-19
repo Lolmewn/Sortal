@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,9 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
-
-import com.iConomy.system.Account;
-import com.iConomy.system.Holdings;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class SPlayerListener extends PlayerListener{
 	public Main plugin;
@@ -56,6 +56,7 @@ public class SPlayerListener extends PlayerListener{
 						if(!pay(p, d)){
 							return;
 						}
+						d.getWorld().loadChunk((int)d.getX(), (int)d.getY());
 						if(d.getWorld().equals(p.getLocation().getWorld())){
 							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch()));
 						}else{
@@ -78,6 +79,7 @@ public class SPlayerListener extends PlayerListener{
 									int y = Integer.parseInt(split[1]);
 									int z = Integer.parseInt(split[2]);
 									Location loc = new Location(p.getWorld(), x, y, z, p.getLocation().getYaw(), p.getLocation().getPitch());
+									loc.getChunk().load();
 									p.teleport(loc);
 									p.sendMessage("You teleported to " + ChatColor.RED + line2 + "!");
 								}
@@ -90,6 +92,7 @@ public class SPlayerListener extends PlayerListener{
 									int z = Integer.parseInt(split[3]);
 									World world = plugin.getServer().getWorld(split[0]);
 									Location loc = new Location(world, x, y, z, p.getLocation().getYaw(), p.getLocation().getPitch());
+									loc.getChunk().load();
 									p.teleport(loc);
 									p.sendMessage("You teleported to " + ChatColor.RED + line2 + "!");
 								}
@@ -116,6 +119,7 @@ public class SPlayerListener extends PlayerListener{
 						if(!pay(p,d)){
 							return;
 						}
+						d.getWorld().loadChunk((int)d.getX(), (int)d.getY());
 						if(d.getWorld().equals(p.getLocation().getWorld())){
 							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch()));
 						}else{
@@ -133,6 +137,7 @@ public class SPlayerListener extends PlayerListener{
 									int y = Integer.parseInt(split[1]);
 									int z = Integer.parseInt(split[2]);
 									Location loc = new Location(p.getWorld(), x, y, z, p.getLocation().getYaw(), p.getLocation().getPitch());
+									loc.getChunk().load();
 									p.teleport(loc);
 									p.sendMessage("You teleported to " + ChatColor.RED + line2 + "!");
 								}
@@ -145,6 +150,7 @@ public class SPlayerListener extends PlayerListener{
 									int z = Integer.parseInt(split[3]);
 									World world = plugin.getServer().getWorld(split[0]);
 									Location loc = new Location(world, x, y, z, p.getLocation().getYaw(), p.getLocation().getPitch());
+									loc.getChunk().load();
 									p.teleport(loc);
 									p.sendMessage("You teleported to " + ChatColor.RED + line2 + "!");
 								}
@@ -163,6 +169,7 @@ public class SPlayerListener extends PlayerListener{
 						}
 						Warp d = plugin.warp.get(warp);
 						Location goo = new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch());
+						goo.getChunk().load();
 						if(d.getWorld().equals(p.getWorld())){
 							p.teleport(goo);
 						}else{
@@ -279,26 +286,21 @@ public class SPlayerListener extends PlayerListener{
 		return false;
 	}
 
-	@SuppressWarnings("static-access")
+	
 	public boolean pay(Player p, Warp d) {
-		double money = d.getCostDouble();
-		if(plugin.iCo != null){
-			Account acc = plugin.iCo.getAccount(p.getName());
-			if(acc != null){
-				Holdings h = acc.getHoldings();
-				if(h.hasEnough(money)){
-					h.subtract(money);
-					p.sendMessage("This has cost you " + plugin.iCo.format(money));
-					return true;
-				}else{
-					p.sendMessage("You do not have enough money to warp!");
-					return false;
-				}
-			}else{
-				p.sendMessage("Your iConomy account seems to be empty! Try using /money!");
-				return false;
-			}
+		if(!plugin.useVault){
+			return true;
 		}
-		return true;
+		Economy econ;
+		RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
+        econ = rsp.getProvider();
+        if(econ == null){
+        	return true; //No Vault found, 
+        }
+        if(!econ.has(p.getName(), d.getCostDouble())){
+        	return false;
+        }
+        econ.withdrawPlayer(p.getName(), d.getCostDouble());
+        return true;
 	}
 }

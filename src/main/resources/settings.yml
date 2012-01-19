@@ -9,9 +9,7 @@ showWhenWarpGetsLoaded: true
 #Use of certain plugins#
 plugins:
     usePermissions: true
-    use3Co: false
-    useiConomy: false
-    useBOSEconomy: false
+    useVault: true
     
 #Messages#
 no-permissions: You do not have permissions to do that!
@@ -27,6 +25,7 @@ warpDoesNotExist: This warp does not exist!
 notAplayer: You must be a player to use this command!
 
 #Databases - if both false, flatfile will be used#
+#NOTE: SQLite and MySQL ARE BROKEN#
 useSQLite: false
 useMySQL: false
 MySQL:
