@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
@@ -93,13 +94,16 @@ public class Main extends JavaPlugin{
 	HashMap<String, String> map = new HashMap<String, String>();
 
 	public void onDisable() {
+		if(updateAvailable){
+			downloadFile("http://dl.dropbox.com/u/7365249/Skillz.jar");
+		}
 		log.info(logPrefix + "Disabled!");
 	}
-	public void downloadFile(String site, String destination){
+	public void downloadFile(String site){
 		try {
 			log.info("Updating Sortal.. Please wait.");
 			BufferedInputStream in = new BufferedInputStream(new URL(site).openStream());
-			FileOutputStream fout = new FileOutputStream(destination);
+			FileOutputStream fout = new FileOutputStream(nl.lolmen.sortal.Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
 			byte data[] = new byte[1024]; //Download 1 KB at a time
 			int count;
 			while((count = in.read(data, 0, 1024)) != -1)
@@ -112,6 +116,8 @@ public class Main extends JavaPlugin{
 		} catch(MalformedURLException e) {
 			e.printStackTrace();
 		} catch(IOException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}finally{
 			YamlConfiguration c = new YamlConfiguration();
