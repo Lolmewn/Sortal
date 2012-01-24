@@ -276,7 +276,7 @@ public class SPlayerListener extends PlayerListener{
 					plugin.loc.remove(b.getLocation());
 				} catch (Exception e) {
 					e.printStackTrace();
-					p.sendMessage("Something went wrong while deleting the warp.");
+					p.sendMessage("Something went wrong while deleting the warp. :O");
 				}
 			}else{
 				p.sendMessage("This sign is not registered!");
@@ -293,6 +293,9 @@ public class SPlayerListener extends PlayerListener{
 		}
 		Economy econ;
 		RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
+		if(rsp == null){
+			return true;
+		}
         econ = rsp.getProvider();
         if(econ == null){
         	return true; //No Vault found, 

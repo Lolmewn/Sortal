@@ -82,7 +82,8 @@ public class Main extends JavaPlugin{
 	public boolean onNoCoords;
 	public String signContains;
 	public boolean update;
-	public int version;
+	public double version;
+	public double latestVersion;
 	public boolean showLoaded;
 	public boolean updateAvailable;
 	double start;
@@ -112,6 +113,15 @@ public class Main extends JavaPlugin{
 			e.printStackTrace();
 		} catch(IOException e) {
 			e.printStackTrace();
+		}finally{
+			YamlConfiguration c = new YamlConfiguration();
+			try{
+				c.load(settings);
+				c.set("version", latestVersion);
+				c.save(settings);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -141,23 +151,18 @@ public class Main extends JavaPlugin{
 			String str;
 			while((str = in.readLine()) != null)
 			{
-				if(!str.equalsIgnoreCase(Integer.toString(version))){
+				if(version < Double.parseDouble(str)){
+					latestVersion = Double.parseDouble(str);
 					updateAvailable = true;
 					log.info(logPrefix + "An update is available! Will be downloaded on Disable! New version: " + str);
-					YamlConfiguration c = new YamlConfiguration();
-					try{
-						c.load(settings);
-						c.set("version", str);
-						c.save(settings);
-					}catch(Exception e){
-						e.printStackTrace();
-					}
 				}
 			}
 			in.close();
 		} catch(MalformedURLException e) {
 			e.printStackTrace();
 		} catch(IOException e) {
+			e.printStackTrace();
+		} catch(Exception e){
 			e.printStackTrace();
 		}
 	}
@@ -496,7 +501,7 @@ public class Main extends JavaPlugin{
 		onNoCoords = c.getBoolean("ifNoCoordsUsePlayerCoords", true);
 		signContains = c.getString("signContains", "[Sortal]");
 		update = c.getBoolean("auto-update", false);
-		version = c.getInt("version", 4);
+		version = c.getDouble("version", 4.4);
 		showLoaded = c.getBoolean("showWhenWarpGetsLoaded", true);
 
 	}
