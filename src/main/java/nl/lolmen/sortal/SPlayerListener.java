@@ -14,18 +14,20 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class SPlayerListener extends PlayerListener{
+public class SPlayerListener implements Listener{
 	public Main plugin;
 	public SPlayerListener(Main main){
 		plugin = main;
 	}
 
-
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteract(PlayerInteractEvent event){
 		Player p = event.getPlayer();
 		Action a = event.getAction();

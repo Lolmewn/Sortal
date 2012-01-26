@@ -7,15 +7,19 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.SignChangeEvent;
 
-public class SBlockListener extends BlockListener{
+public class SBlockListener implements Listener{
 	public Main plugin;
 	public SBlockListener(Main main) {
 		plugin = main;
 	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChange(SignChangeEvent event){
 		Player p = event.getPlayer();
 		for(int i = 0; i<event.getLines().length; i++){
@@ -30,6 +34,7 @@ public class SBlockListener extends BlockListener{
 		}
 	}
 	
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreak(BlockBreakEvent event){
 		Block block = event.getBlock();
 		if ((block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
