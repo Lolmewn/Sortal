@@ -12,13 +12,13 @@ import org.bukkit.World;
 public class Warp{	
 	public String maindir = "plugins/Sortal/";
 	public File warps = new File(maindir + "warps.txt");
-	String warp;
-	World world;
-	double x;
-	double y;
-	double z;
-	public Main plugin;
-	int cost;
+	private String warp;
+	private World world;
+	private double x;
+	private double y;
+	private double z;
+	private Main plugin;
+	private int cost;
 	
 	public Warp(Main main) {
 		plugin = main;
@@ -45,16 +45,16 @@ public class Warp{
 	public void saveWarp() {
 		//if(!plugin.useSQL && !plugin.useMySQL){
 			try {
-				if(!warps.exists()){
-					warps.createNewFile();
+				if(!this.warps.exists()){
+					this.warps.createNewFile();
 				}
 				Properties prop = new Properties();
-				FileInputStream in = new FileInputStream(warps);
+				FileInputStream in = new FileInputStream(this.warps);
 				prop.load(in);
 				prop.put(warp(), toString());
-				FileOutputStream out = new FileOutputStream(warps);
+				FileOutputStream out = new FileOutputStream(this.warps);
 				prop.store(out, "[WarpName]=[World],[X],[Y],[Z]");
-				plugin.warp.put(warp(), new Warp(plugin, warp, world, x,y,z));
+				this.plugin.warp.put(warp(), new Warp(this.plugin, this.warp, this.world, this.x,this.y,this.z));
 				in.close();
 				out.flush();
 				out.close();
@@ -80,18 +80,18 @@ public class Warp{
 	public boolean delWarp(){
 		//if(!plugin.useSQL && !plugin.useMySQL){
 			try{
-				if(!warps.exists()){
-					warps.createNewFile();
+				if(!this.warps.exists()){
+					this.warps.createNewFile();
 					return false;
 				}
 				Properties prop = new Properties();
-				FileInputStream in = new FileInputStream(warps);
+				FileInputStream in = new FileInputStream(this.warps);
 				prop.load(in);
-				if(prop.containsKey(warp)){
-					prop.remove(warp);
-					FileOutputStream out = new FileOutputStream(warps);
+				if(prop.containsKey(this.warp)){
+					prop.remove(this.warp);
+					FileOutputStream out = new FileOutputStream(this.warps);
 					prop.store(out, "[WarpName]=[World],[X],[Y],[Z]");
-					plugin.warp.remove(warp);
+					this.plugin.warp.remove(this.warp);
 					out.flush();
 					out.close();
 					in.close();
@@ -107,19 +107,19 @@ public class Warp{
 	public boolean setCost(int cost){
 		//if(!plugin.useSQL && !plugin.useMySQL){//
 			try{
-				if(!warps.exists()){
-					warps.createNewFile();
+				if(!this.warps.exists()){
+					this.warps.createNewFile();
 					return false;
 				}
 				Properties prop = new Properties();
 				FileInputStream in = new FileInputStream(warps);
 				prop.load(in);
-				if(prop.containsKey(warp)){
-					prop.setProperty(warp, prop.getProperty(warp) + "," + cost);
+				if(prop.containsKey(this.warp)){
+					prop.setProperty(this.warp, prop.getProperty(this.warp) + "," + cost);
 					FileOutputStream out = new FileOutputStream(warps);
 					prop.store(out, "[WarpName]=[World],[X],[Y],[Z]");
-					plugin.warp.remove(warp);
-					plugin.warp.put(warp, new Warp(plugin, warp, new Location(getWorld(), getX(), getY(), getZ()), cost));
+					this.plugin.warp.remove(this.warp);
+					this.plugin.warp.put(this.warp, new Warp(this.plugin, this.warp, new Location(this.getWorld(), this.getX(), this.getY(), this.getZ()), this.cost));
 					out.flush();
 					out.close();
 					in.close();
@@ -148,35 +148,35 @@ public class Warp{
 		}*/
 	}
 	public int getCost(){
-		if(cost == 0){
-			return plugin.warpUsePrice;
+		if(this.cost == 0){
+			return this.plugin.warpUsePrice;
 		}else{
-			return cost;
+			return this.cost;
 		}
 	}
 	public double getCostDouble(){
-		if(cost == 0){
-			return (double)plugin.warpUsePrice;
+		if(this.cost == 0){
+			return (double)this.plugin.warpUsePrice;
 		}else{
-			return (double)cost;
+			return (double)this.cost;
 		}
 	}
 	public String warp(){
-		return warp;
+		return this.warp;
 	}
 	public World getWorld(){
-		return world;
+		return this.world;
 	}
 	public double getX(){
-		return x;
+		return this.x;
 	}
 	public double getY(){
-		return y;
+		return this.y;
 	}
 	public double getZ(){
-		return z;
+		return this.z;
 	}
 	public String toString(){
-		return world.getName() + "," + Double.toString(x) + "," + Double.toString(y) + "," + Double.toString(z);
+		return this.world.getName() + "," + Double.toString(this.x) + "," + Double.toString(this.y) + "," + Double.toString(this.z);
 	}
 }

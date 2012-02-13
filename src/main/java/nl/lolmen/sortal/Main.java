@@ -715,16 +715,17 @@ public class Main extends JavaPlugin{
 					return true;
 				}
 				if(args.length == 1){
-					if(!warp.containsKey(args[0])){
-						sender.sendMessage("This warp does not exist! Can't register.");
-						return true;
-					}
+					
 					if(register.containsKey((Player)sender)){
 						sender.sendMessage("No longer registering warp " + register.get((Player)sender));
 						register.remove(((Player)sender));
 						return true;
 					}
 					sender.sendMessage("You must also give the warpname!");
+					return true;
+				}
+				if(!warp.containsKey(args[1])){
+					sender.sendMessage("This warp does not exist! Can't register.");
 					return true;
 				}
 				register(((Player)sender), args[1]);
