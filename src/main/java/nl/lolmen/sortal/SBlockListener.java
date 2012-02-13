@@ -54,6 +54,7 @@ public class SBlockListener implements Listener{
 			if(!event.getPlayer().hasPermission("sortal.delsign")){
 				event.getPlayer().sendMessage("[Sortal] You do not have permissions to destroy a registered sign!");
 				event.setCancelled(true);
+				return;
 			}
 			delLoc(block.getLocation());
 			plugin.log.info("Registered sign destroyed by " + event.getPlayer().getDisplayName() + ", AKA " + event.getPlayer().getName() + "!");
