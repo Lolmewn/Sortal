@@ -6,6 +6,7 @@ import java.util.Properties;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,8 +38,17 @@ public class SBlockListener implements Listener{
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreak(BlockBreakEvent event){
 		Block block = event.getBlock();
+		Sign s = (Sign)block.getState();
 		if ((block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
 			if(!plugin.loc.containsKey(block.getLocation())){
+				for(int i = 0; i<s.getLines().length; i++){
+					if(s.getLine(i).toLowerCase().contains("[sortal]") || s.getLine(i).toLowerCase().contains(plugin.signContains)){
+						if(!event.getPlayer().hasPermission("sortal.delsign")){
+							event.getPlayer().sendMessage("[Sortal] You do not have permissions to destroy a registered sign!");
+							event.setCancelled(true);
+						}
+					}
+				}
 				return;
 			}
 			if(!event.getPlayer().hasPermission("sortal.delsign")){
