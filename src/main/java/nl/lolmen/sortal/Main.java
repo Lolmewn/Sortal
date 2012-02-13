@@ -756,7 +756,7 @@ public class Main extends JavaPlugin{
 			}
 			if(args[0].equalsIgnoreCase("unregister")){
 				if(sender instanceof Player){
-					if(sender.hasPermission("sortal.unregister")){
+					if(!sender.hasPermission("sortal.unregister")){
 						sender.sendMessage(noPerm);
 						return true;
 					}
