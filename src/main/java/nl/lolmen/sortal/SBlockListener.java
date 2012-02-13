@@ -28,7 +28,7 @@ public class SBlockListener implements Listener{
 				if(event.getPlayer().hasPermission("sortal.placesign")){
 					plugin.log.info("[Sortal] Sign placed by " + p.getDisplayName() + ", AKA " + p.getName() + "!");
 				}else{
-					p.sendMessage("You are not allowed to place a [sortal] sign!");
+					p.sendMessage("You are not allowed to place a [Sortal] sign!");
 					event.setCancelled(true);
 				}
 			}
@@ -44,7 +44,7 @@ public class SBlockListener implements Listener{
 				for(int i = 0; i<s.getLines().length; i++){
 					if(s.getLine(i).toLowerCase().contains("[sortal]") || s.getLine(i).toLowerCase().contains(plugin.signContains)){
 						if(!event.getPlayer().hasPermission("sortal.delsign")){
-							event.getPlayer().sendMessage("[Sortal] You do not have permissions to destroy a registered sign!");
+							event.getPlayer().sendMessage("[Sortal] You do not have permissions to destroy a [Sortal] sign!");
 							event.setCancelled(true);
 						}
 					}

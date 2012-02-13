@@ -296,16 +296,17 @@ public class SPlayerListener implements Listener{
 		Economy econ;
 		RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
 		if(rsp == null){
-			return true;
+			return true; //No Vault found
 		}
         econ = rsp.getProvider();
         if(econ == null){
-        	return true; //No Vault found, 
+        	return true; //No Vault found
         }
         if(!econ.has(p.getName(), d.getCostDouble())){
         	return false;
         }
         econ.withdrawPlayer(p.getName(), d.getCostDouble());
+        p.sendMessage("Withdrawing " + econ.format(d.getCostDouble()) + " from your bank!");
         return true;
 	}
 }
