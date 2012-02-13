@@ -38,15 +38,15 @@ public class SBlockListener implements Listener{
 	public void onBlockBreak(BlockBreakEvent event){
 		Block block = event.getBlock();
 		if ((block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
+			if(!plugin.loc.containsKey(block.getLocation())){
+				return;
+			}
 			if(!event.getPlayer().hasPermission("sortal.delsign")){
 				event.getPlayer().sendMessage("[Sortal] You do not have permissions to destroy a registered sign!");
 				event.setCancelled(true);
 			}
-			if(plugin.loc.containsKey(block.getLocation())){
-				delLoc(block.getLocation());
-				plugin.log.info("Registered sign destroyed by " + event.getPlayer().getDisplayName() + ", AKA " + event.getPlayer().getName() + "!");
-			}
-			return;
+			delLoc(block.getLocation());
+			plugin.log.info("Registered sign destroyed by " + event.getPlayer().getDisplayName() + ", AKA " + event.getPlayer().getName() + "!");
 		}
 	}
 
