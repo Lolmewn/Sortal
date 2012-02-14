@@ -58,11 +58,11 @@ public class SPlayerListener implements Listener{
 						if(!pay(p, d)){
 							return;
 						}
-						d.getWorld().loadChunk((int)d.getX(), (int)d.getY());
+						d.getWorld().getChunkAt((int)d.getX(), (int)d.getZ()).load();
 						if(d.getWorld().equals(p.getLocation().getWorld())){
 							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch()));
 						}else{
-							p.teleport(new Location(d.getWorld(), 0, 100, 0));
+							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getX())); //teleport to that world --\/ Teleport to exact location
 							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch()));
 						}
 						p.sendMessage("You teleported to " + ChatColor.RED + d.warp() +"!");
@@ -121,11 +121,11 @@ public class SPlayerListener implements Listener{
 						if(!pay(p,d)){
 							return;
 						}
-						d.getWorld().loadChunk((int)d.getX(), (int)d.getY());
+						d.getWorld().getChunkAt((int)d.getX(), (int)d.getZ()).load();
 						if(d.getWorld().equals(p.getLocation().getWorld())){
 							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch()));
 						}else{
-							p.teleport(new Location(d.getWorld(), 0, 100, 0));
+							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ()));
 							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch()));
 						}
 						p.sendMessage("You teleported to " + ChatColor.RED + d.warp());
