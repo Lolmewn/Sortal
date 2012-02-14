@@ -93,7 +93,7 @@ public class Main extends JavaPlugin{
 
 	public void onDisable() {
 		if(updateAvailable){
-			downloadFile("http://dl.dropbox.com/u/7365249/Skillz.jar");
+			downloadFile("http://dl.dropbox.com/u/7365249/Sortal.jar");
 		}
 		log.info(logPrefix + "Disabled!");
 	}
