@@ -1,6 +1,6 @@
 name: Sortal
 main: nl.lolmen.sortal.Main
-version: 4.5
+version: 4.6
 description: Make Sign Portals!
 commands:
   sortal:
