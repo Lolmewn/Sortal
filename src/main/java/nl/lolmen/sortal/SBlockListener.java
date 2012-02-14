@@ -38,8 +38,8 @@ public class SBlockListener implements Listener{
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreak(BlockBreakEvent event){
 		Block block = event.getBlock();
-		Sign s = (Sign)block.getState();
 		if ((block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
+			Sign s = (Sign)block.getState();
 			if(!plugin.loc.containsKey(block.getLocation())){
 				for(int i = 0; i<s.getLines().length; i++){
 					if(s.getLine(i).toLowerCase().contains("[sortal]") || s.getLine(i).toLowerCase().contains(plugin.signContains)){
