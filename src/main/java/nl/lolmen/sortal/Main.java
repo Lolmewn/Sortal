@@ -14,13 +14,13 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Logger;
 //import nl.lolmen.database.MySQL;
 //import nl.lolmen.database.SQLite;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -690,14 +690,39 @@ public class Main extends JavaPlugin{
 				}
 			}
 			if(args[0].equalsIgnoreCase("list")){
-				sender.sendMessage("Warps: " + Integer.toString(warp.size()));
-				Collection<Warp> c = this.warp.values();
-				Object[] array = c.toArray();
-				for(Object str: array){
-					if(str instanceof Warp){
-						Warp d = (Warp)str;
+				if(args.length == 1){
+					sender.sendMessage(ChatColor.GRAY + "Page 1/" + ((int)this.warp.size() / 9 + 1) + ChatColor.GREEN + "Warps: " + ChatColor.RED + Integer.toString(warp.size()));
+					int count = 1;
+					for(String entry: this.warp.keySet()){
+						if(count >= 9){
+							return true;
+						}
+						Warp d = this.warp.get(entry);
 						sender.sendMessage(d.warp() + ": " + d.toString());
+						count++;
 					}
+					return true;
+				}
+				if(!this.isInt(args[1])){
+					sender.sendMessage("page must be Integer, not something else!");
+					return true;
+				}
+				if(Integer.parseInt(args[1]) > (int)(this.warp.size() / 9) + 1){
+					sender.sendMessage("No page " + args[1] + " available!");
+					return true;
+				}
+				sender.sendMessage(ChatColor.GRAY + "Page " + args[1] + "/" + ((int)this.warp.size() / 9 + 1) + ChatColor.GREEN + "Warps: " + ChatColor.RED + Integer.toString(warp.size()));
+				int count = 1;
+				for(String entry: this.warp.keySet()){
+					if(count >= 9 * Integer.parseInt(args[1])){
+						return true;
+					}
+					if(count <= Integer.parseInt(args[1]) * 9 - 9){
+						continue;
+					}
+					Warp d = this.warp.get(entry);
+					sender.sendMessage(d.warp() + ": " + d.toString());
+					count++;
 				}
 				return true;
 			}
