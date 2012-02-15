@@ -695,7 +695,7 @@ public class Main extends JavaPlugin{
 					return true;
 				}
 				if(!this.isInt(args[1])){
-					sender.sendMessage("page must be Integer, not something else!");
+					sender.sendMessage("Page must be Integer, not something else!");
 					return true;
 				}
 				if(Integer.parseInt(args[1]) > (int)(this.warp.size() / 9) + 1){
@@ -709,6 +709,7 @@ public class Main extends JavaPlugin{
 						return true;
 					}
 					if(count <= Integer.parseInt(args[1]) * 9 - 9){
+						count++;
 						continue;
 					}
 					Warp d = this.warp.get(entry);
