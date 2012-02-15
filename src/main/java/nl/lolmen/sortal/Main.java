@@ -72,34 +72,34 @@ public class Main extends JavaPlugin{
 	public String notAplayer;
 	//public boolean useSQL;
 	//public boolean useMySQL;
-	public String dbUser;
-	public String dbPass;
-	public String dbDB;
-	public String dbHost;
+	//private String dbUser;
+	//private String dbPass;
+	//private String dbDB;
+	//private String dbHost;
 	public int warpCreatePrice;
 	public int warpUsePrice;
 	public boolean onNoCoords;
 	public String signContains;
-	public boolean update;
-	public double version;
-	public double latestVersion;
-	public boolean showLoaded;
-	public boolean updateAvailable;
-	double start;
-	double end;
+	private boolean update;
+	private double version;
+	private double latestVersion;
+	private boolean showLoaded;
+	private boolean updateAvailable;
+	private double start;
+	private double end;
 	
-	boolean converting;
+	private boolean converting;
 	HashMap<String, String> map = new HashMap<String, String>();
 
 	public void onDisable() {
-		if(updateAvailable){
-			downloadFile("http://dl.dropbox.com/u/7365249/Sortal.jar");
+		if(this.updateAvailable){
+			this.downloadFile("http://dl.dropbox.com/u/7365249/Sortal.jar");
 		}
-		log.info(logPrefix + "Disabled!");
+		this.log.info(logPrefix + "Disabled!");
 	}
 	public void downloadFile(String site){
 		try {
-			log.info("Updating Sortal.. Please wait.");
+			this.log.info("Updating Sortal.. Please wait.");
 			BufferedInputStream in = new BufferedInputStream(new URL(site).openStream());
 			FileOutputStream fout = new FileOutputStream(nl.lolmen.sortal.Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
 			byte data[] = new byte[1024]; //Download 1 KB at a time
@@ -108,7 +108,7 @@ public class Main extends JavaPlugin{
 			{
 				fout.write(data, 0, count);
 			}
-			log.info("Sortal has been updated!");
+			this.log.info("Sortal has been updated!");
 			in.close();
 			fout.close();
 		} catch(MalformedURLException e) {
@@ -120,9 +120,9 @@ public class Main extends JavaPlugin{
 		}finally{
 			YamlConfiguration c = new YamlConfiguration();
 			try{
-				c.load(settings);
-				c.set("version", latestVersion);
-				c.save(settings);
+				c.load(this.settings);
+				c.set("version", this.latestVersion);
+				c.save(this.settings);
 			}catch(Exception e){
 				e.printStackTrace();
 			}
@@ -130,23 +130,23 @@ public class Main extends JavaPlugin{
 	}
 
 	public void onEnable() {
-		start = System.nanoTime();
-		new File(maindir).mkdir();
-		makeSettings();
-		loadSettings();
-		if(update){
-			checkUpdate();
+		this.start = System.nanoTime();
+		new File(this.maindir).mkdir();
+		this.makeSettings();
+		this.loadSettings();
+		if(this.update){
+			this.checkUpdate();
 		}
-		loadDB();
-		loadWarps();
-		loadSigns();
-		loadPlugins();
+		this.loadDB();
+		this.loadWarps();
+		this.loadSigns();
+		this.loadPlugins();
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvents( player, this);
-		pm.registerEvents( block, this);
-		end = System.nanoTime();
-		double taken = (end-start)/1000000;
-		log.info(logPrefix + "Enabled! It took " + Double.toString(taken) + "ms!");
+		pm.registerEvents( this.player, this);
+		pm.registerEvents( this.block, this);
+		this.end = System.nanoTime();
+		double taken = (this.end-this.start)/1000000;
+		this.log.info(this.logPrefix + "Enabled! It took " + Double.toString(taken) + "ms!");
 	}
 	private void checkUpdate() {
 		try {
@@ -155,10 +155,10 @@ public class Main extends JavaPlugin{
 			String str;
 			while((str = in.readLine()) != null)
 			{
-				if(version < Double.parseDouble(str)){
-					latestVersion = Double.parseDouble(str);
-					updateAvailable = true;
-					log.info(logPrefix + "An update is available! Will be downloaded on Disable! New version: " + str);
+				if(this.version < Double.parseDouble(str)){
+					this.latestVersion = Double.parseDouble(str);
+					this.updateAvailable = true;
+					this.log.info(logPrefix + "An update is available! Will be downloaded on Disable! New version: " + str);
 				}
 			}
 			in.close();
@@ -174,18 +174,18 @@ public class Main extends JavaPlugin{
 	private void loadSigns() {
 		//if(!useSQL && !useMySQL){
 			try {
-				if(!locs.exists()){
-					locs.createNewFile();
+				if(!this.locs.exists()){
+					this.locs.createNewFile();
 					return;
 				}
-				log.info(logPrefix + "Starting to load signs..");
-				BufferedReader in1 = new BufferedReader(new FileReader(locs));
+				this.log.info(logPrefix + "Starting to load signs..");
+				BufferedReader in1 = new BufferedReader(new FileReader(this.locs));
 				String str;
 				while ((str = in1.readLine()) != null){
 					processLocs(str);
 				}
 				in1.close();
-				log.info(logPrefix + Integer.toString(loc.size()) + " signs loaded!");
+				this.log.info(this.logPrefix + Integer.toString(this.loc.size()) + " signs loaded!");
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -250,34 +250,34 @@ public class Main extends JavaPlugin{
 		String[] rest = split[0].split(",");
 		if(rest.length == 3){
 			if(isInt(rest[0]) && isInt(rest[1]) && isInt(rest[2])){
-				loc.put(new Location(getServer().getWorld("world"), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
-				if(showLoaded){
-					log.info(logPrefix + "Sign pointing to " + warp + " loaded!");
+				this.loc.put(new Location(getServer().getWorld("world"), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
+				if(this.showLoaded){
+					this.log.info(logPrefix + "Sign pointing to " + warp + " loaded!");
 				}
 				return;
 			}else{
-				if(showLoaded){
-					log.info(logPrefix + "Sign pointing to " + warp + " could not be loaded!");
+				if(this.showLoaded){
+					this.log.info(logPrefix + "Sign pointing to " + warp + " could not be loaded!");
 				}
 				return;
 			}
 		}
 		if(rest.length == 4){
 			if(isInt(rest[0]) && isInt(rest[1]) && isInt(rest[2])){
-				loc.put(new Location(getServer().getWorld(rest[3]), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
-				if(showLoaded){
-					log.info(logPrefix + "Sign pointing to " + warp + " loaded!");
+				this.loc.put(new Location(getServer().getWorld(rest[3]), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
+				if(this.showLoaded){
+					this.log.info(logPrefix + "Sign pointing to " + warp + " loaded!");
 				}
 				return;
 			}else if(isInt(rest[3]) && isInt(rest[1]) && isInt(rest[2])){
-				loc.put(new Location(getServer().getWorld(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2]), Integer.parseInt(rest[3])), warp);
-				if(showLoaded){
-					log.info(logPrefix + "Sign pointing to " + warp + " loaded!");
+				this.loc.put(new Location(getServer().getWorld(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2]), Integer.parseInt(rest[3])), warp);
+				if(this.showLoaded){
+					this.log.info(logPrefix + "Sign pointing to " + warp + " loaded!");
 				}
 				return;
 			}else{
-				if(showLoaded){
-					log.info(logPrefix + "Sign pointing to " + warp + " could not be loaded!");
+				if(this.showLoaded){
+					this.log.info(logPrefix + "Sign pointing to " + warp + " could not be loaded!");
 				}
 			}
 		}
@@ -286,19 +286,19 @@ public class Main extends JavaPlugin{
 	private void loadWarps() {
 		//if(!useSQL && !useMySQL){
 			try {
-				if(!warps.exists()){
-					warps.createNewFile();
+				if(!this.warps.exists()){
+					this.warps.createNewFile();
 					return;
 				}
-				log.info(logPrefix + "Starting to load warps..");
+				this.log.info(logPrefix + "Starting to load warps..");
 				BufferedReader in1 = new BufferedReader(new FileReader(warps));
 				String str;
 				while ((str = in1.readLine()) != null){
-					if(!converting){
-						process(str);
+					if(!this.converting){
+						this.process(str);
 					}else{
-						converting = false;
-						convert();
+						this.converting = false;
+						this.convert();
 						return;
 					}
 				}
@@ -356,7 +356,7 @@ public class Main extends JavaPlugin{
 			}
 		}*/
 
-		log.info(logPrefix + Integer.toString(warp.size()) + " warps loaded!");
+			this.log.info(this.logPrefix + Integer.toString(this.warp.size()) + " warps loaded!");
 	}
 
 	private void process(String str) {
@@ -367,8 +367,8 @@ public class Main extends JavaPlugin{
 	    String warp = split[0];
 	    String[] restsplit = split[1].split(",");
 	    if(isInt(restsplit[0])){
-	    	log.info(logPrefix + "You seem to have an old version of warps.txt! Converting!");
-	    	converting = true;
+	    	this.log.info(this.logPrefix + "You seem to have an old version of warps.txt! Converting!");
+	    	this.converting = true;
 	    }else{
 	    	if(restsplit.length == 4){
 	    		String wname = restsplit[0];
@@ -376,17 +376,17 @@ public class Main extends JavaPlugin{
 	    		double y = Double.parseDouble(restsplit[2]);
 	    		double z = Double.parseDouble(restsplit[3]);
 	    		this.warp.put(warp, new Warp(this, warp, getServer().getWorld(wname), x, y, z));
-	    		if(showLoaded){
-	    			log.info(logPrefix + "Warp " + warp + " loaded!");
+	    		if(this.showLoaded){
+	    			this.log.info(logPrefix + "Warp " + warp + " loaded!");
 	    		}
 	    	}else{
-	    		log.info(logPrefix + "A Warp couldn't be loaded!");
+	    		this.log.info(logPrefix + "A Warp couldn't be loaded!");
 	    	}
 	    }
 	}
 	private void convert() {
 		File f = new File(maindir + "warps_old.txt");
-		warps.renameTo(f);
+		this.warps.renameTo(f);
 		BufferedReader in1;
 		try {
 			in1 = new BufferedReader(new FileReader(warps));
@@ -395,14 +395,14 @@ public class Main extends JavaPlugin{
 				convertLine(str);
 			}
 			Properties prop = new Properties();
-			new File(maindir + "warps.txt").createNewFile();
-			prop.putAll(map);
+			new File(this.maindir + "warps.txt").createNewFile();
+			prop.putAll(this.map);
 			FileOutputStream out = new FileOutputStream(new File(maindir + "warps.txt"));
 			prop.store(out, "[WarpName]=[World],[X],[Y],[Z]");
 			in1.close();
 			out.flush();
 			out.close();
-			loadWarps();
+			this.loadWarps();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -418,11 +418,11 @@ public class Main extends JavaPlugin{
 	    if(restsplit.length == 3){
 	    	//No world specified, defaulting to "world"
 	    	String back = "world," + split[1];
-	    	map.put(warp, back);
+	    	this.map.put(warp, back);
 	    }
 	    if(restsplit.length == 4){
 	    	String back = restsplit[3] + "," + restsplit[0] + "," + restsplit[1] + "," + restsplit[2];
-	    	map.put(warp, back);
+	    	this.map.put(warp, back);
 	    }
 	}
 
@@ -430,11 +430,11 @@ public class Main extends JavaPlugin{
 		Plugin test;
 		test = getServer().getPluginManager().getPlugin("Vault");
 		if(test != null){
-			if(useVault){
-				log.info("[Sortal] Hooked into Vault!");
+			if(this.useVault){
+				this.log.info("[Sortal] Hooked into Vault!");
 				return;
 			}else{
-				log.info("[Sortal] iConomy found but not used due to settings");
+				this.log.info("[Sortal] iConomy found but not used due to settings");
 			}
 		}
 	}
@@ -481,42 +481,55 @@ public class Main extends JavaPlugin{
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		useVault = c.getBoolean("plugins.useVault");
-		usePerm = c.getBoolean("plugins.usePermissions", false);
-		noPerm = c.getString("no-permissions", "You do not have permissions to do that!");
-		warpCreateNameForgotten = c.getString("warpCreateNameForgotten", "You must give a name to this warp!");
-		warpCreateCoordsForgotten = c.getString("warpCreateCoordsForgotten", "You must specify the coords for this warp!");
-		warpDeleteNameForgotten = c.getString("warpDeleteNameForgotten", "You forgot to name the warp you want to delete!");
-		nameInUse = c.getString("nameInUse", "Sorry, that name is in use!");
-		moneyPayed = c.getString("moneyPayed", "This has cost you MONEY!");
-		warpCreated = c.getString("warpCreated", "Warp WARPNAME set up!");
-		notEnoughMoney = c.getString("notEnoughMoney", "You do not have enough money to do that!");
-		warpDeleted = c.getString("warpDeleted", "Warp WARPNAME deleted!");
-		warpDoesNotExist = c.getString("warpDoesNotExist", "This warp does not exist!");
-		notAplayer = c.getString("notAplayer", "You must be a player to use this command!");
-		//useSQL = c.getBoolean("useSQLite", false);
-		//useMySQL = c.getBoolean("useMySQL", false);
-		dbUser = c.getString("MySQL.username");
-		dbPass = c.getString("MySQL.password");
-		dbHost = c.getString("MySQL.host");
-		dbDB = c.getString("MySQL.Warpbase");
-		warpCreatePrice = c.getInt("warpCreatePrice", 0);
-		warpUsePrice = c.getInt("warpUsePrice", 0);
-		onNoCoords = c.getBoolean("ifNoCoordsUsePlayerCoords", true);
-		signContains = c.getString("signContains", "[Sortal]");
-		update = c.getBoolean("auto-update", false);
-		version = c.getDouble("version", 4.4);
-		showLoaded = c.getBoolean("showWhenWarpGetsLoaded", true);
-
+		this.useVault = c.getBoolean("plugins.useVault", true);
+		if(!c.contains("plugins.useVault")){
+			c.addDefault("plugins.useVault", true);
+		}
+		this.usePerm = c.getBoolean("plugins.usePermissions", true);
+		if(!c.contains("plugins.usePermissions")){
+			c.addDefault("plugins.usePermissions", true);
+		}
+		this.noPerm = c.getString("no-permissions", "You do not have permissions to do that!");
+		this.warpCreateNameForgotten = c.getString("warpCreateNameForgotten", "You must give a name to this warp!");
+		this.warpCreateCoordsForgotten = c.getString("warpCreateCoordsForgotten", "You must specify the coords for this warp!");
+		this.warpDeleteNameForgotten = c.getString("warpDeleteNameForgotten", "You forgot to name the warp you want to delete!");
+		this.nameInUse = c.getString("nameInUse", "Sorry, that name is in use!");
+		this.moneyPayed = c.getString("moneyPayed", "This has cost you MONEY!");
+		this.warpCreated = c.getString("warpCreated", "Warp WARPNAME set up!");
+		this.notEnoughMoney = c.getString("notEnoughMoney", "You do not have enough money to do that!");
+		this.warpDeleted = c.getString("warpDeleted", "Warp WARPNAME deleted!");
+		this.warpDoesNotExist = c.getString("warpDoesNotExist", "This warp does not exist!");
+		this.notAplayer = c.getString("notAplayer", "You must be a player to use this command!");
+		//this.useSQL = c.getBoolean("useSQLite", false);
+		//this.useMySQL = c.getBoolean("useMySQL", false);
+		//this.dbUser = c.getString("MySQL.username");
+		//this.dbPass = c.getString("MySQL.password");
+		//this.dbHost = c.getString("MySQL.host");
+		//this.dbDB = c.getString("MySQL.Warpbase");
+		this.warpCreatePrice = c.getInt("warpCreatePrice", 0);
+		this.warpUsePrice = c.getInt("warpUsePrice", 0);
+		this.onNoCoords = c.getBoolean("ifNoCoordsUsePlayerCoords", true);
+		this.signContains = c.getString("signContains", "[Sortal]");
+		this.update = c.getBoolean("auto-update", false);
+		this.version = c.getDouble("version", 4.6);
+		if(!c.contains("version")){
+			c.addDefault("version", 4.6);
+		}
+		this.showLoaded = c.getBoolean("showWhenWarpGetsLoaded", true);
+		try {
+			c.save(settings);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void makeSettings() {
-		if(!settings.exists()){
+		if(!this.settings.exists()){
 			try {
-				settings.createNewFile();
-				log.info(logPrefix + "Trying to create default config...");
+				this.settings.createNewFile();
+				this.log.info(this.logPrefix + "Trying to create default config...");
 				try {
-					File efile = new File(maindir, "settings.yml");
+					File efile = new File(this.maindir, "settings.yml");
 					
 					InputStream in = this.getClass().getClassLoader().getResourceAsStream("settings.yml");
 					OutputStream out = new BufferedOutputStream(new FileOutputStream(efile));
@@ -527,10 +540,10 @@ public class Main extends JavaPlugin{
 					out.flush();
 					out.close();
 					in.close();
-					log.info(logPrefix + "Default config created succesfully!");
+					this.log.info(logPrefix + "Default config created succesfully!");
 				}catch (Exception e) {
 					e.printStackTrace();
-					log.warning(logPrefix + "Error creating settings file! Using default settings!");
+					this.log.warning(logPrefix + "Error creating settings file! Using default settings!");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -574,13 +587,13 @@ public class Main extends JavaPlugin{
 					if(sender.hasPermission("sortal.createwarp")){
 						//log.info(Integer.toString(args.length));
 						if(args.length == 1){
-							sender.sendMessage(warpCreateNameForgotten);
+							sender.sendMessage(this.warpCreateNameForgotten);
 							return true;
 						}
 						if(args.length == 2){
-							if(onNoCoords){
+							if(this.onNoCoords){
 								if(warp.containsKey(args[1])){
-									sender.sendMessage(nameInUse);
+									sender.sendMessage(this.nameInUse);
 									return true;
 								}
 								Warp d = new Warp(this, args[1], ((Player)sender).getLocation());
@@ -588,14 +601,14 @@ public class Main extends JavaPlugin{
 								sender.sendMessage(warpCreated(args[1]));
 								return true;
 							}else{
-								sender.sendMessage(warpCreateCoordsForgotten);
+								sender.sendMessage(this.warpCreateCoordsForgotten);
 								return true;
 							}
 						}
 						if(args.length == 3){
 							if(args[2].equalsIgnoreCase("here") || args[2].equalsIgnoreCase("this")){
-								if(warp.containsKey(args[1])){
-									sender.sendMessage(nameInUse);
+								if(this.warp.containsKey(args[1])){
+									sender.sendMessage(this.nameInUse);
 									return true;
 								}
 								Warp d = new Warp(this, args[1], ((Player)sender).getLocation());
@@ -605,8 +618,8 @@ public class Main extends JavaPlugin{
 							}
 						}
 						if(args.length > 4){
-							if(warp.containsKey(args[1])){
-								sender.sendMessage(nameInUse);
+							if(this.warp.containsKey(args[1])){
+								sender.sendMessage(this.nameInUse);
 								return true;
 							}
 							if(isInt(args[2])){
@@ -642,23 +655,23 @@ public class Main extends JavaPlugin{
 						sender.sendMessage("Too little or too many arguments! Try /sortal setwarp " + args[1] + " here");
 						return true;
 					}else{
-						sender.sendMessage(noPerm);
+						sender.sendMessage(this.noPerm);
 						return true;
 					}
 				}else{
-					sender.sendMessage(notAplayer);
+					sender.sendMessage(this.notAplayer);
 					return true;
 				}
 			}
 			if(args[0].equalsIgnoreCase("delwarp")){
 				if(sender.hasPermission("sortal.delwarp")){
 					if(args.length == 1){
-						sender.sendMessage(warpDeleteNameForgotten);
+						sender.sendMessage(this.warpDeleteNameForgotten);
 						return true;
 					}
 					if(args.length == 2){
-						if(warp.containsKey(args[1])){
-							Warp d = warp.get(args[1]);
+						if(this.warp.containsKey(args[1])){
+							Warp d = this.warp.get(args[1]);
 							if(d.delWarp()){
 								sender.sendMessage(warpDeleted(args[1]));
 								return true;
@@ -667,18 +680,18 @@ public class Main extends JavaPlugin{
 								return true;
 							}
 						}else{
-							sender.sendMessage(warpDoesNotExist);
+							sender.sendMessage(this.warpDoesNotExist);
 							return true;
 						}
 					}
 				}else{
-					sender.sendMessage(noPerm);
+					sender.sendMessage(this.noPerm);
 					return true;
 				}
 			}
 			if(args[0].equalsIgnoreCase("list")){
 				sender.sendMessage("Warps: " + Integer.toString(warp.size()));
-				Collection<Warp> c = warp.values();
+				Collection<Warp> c = this.warp.values();
 				Object[] array = c.toArray();
 				for(Object str: array){
 					if(str instanceof Warp){
@@ -711,39 +724,39 @@ public class Main extends JavaPlugin{
 					return true;
 				}
 				if(!(sender instanceof Player)){
-					sender.sendMessage(notAplayer);
+					sender.sendMessage(this.notAplayer);
 					return true;
 				}
 				if(args.length == 1){
 					
-					if(register.containsKey((Player)sender)){
-						sender.sendMessage("No longer registering warp " + register.get((Player)sender));
-						register.remove(((Player)sender));
+					if(this.register.containsKey((Player)sender)){
+						sender.sendMessage("No longer registering warp " + this.register.get((Player)sender));
+						this.register.remove(((Player)sender));
 						return true;
 					}
 					sender.sendMessage("You must also give the warpname!");
 					return true;
 				}
-				if(!warp.containsKey(args[1])){
+				if(!this.warp.containsKey(args[1])){
 					sender.sendMessage("This warp does not exist! Can't register.");
 					return true;
 				}
-				register(((Player)sender), args[1]);
+				this.register(((Player)sender), args[1]);
 				return true;
 			}
 			if(args[0].equalsIgnoreCase("setprice")){
 				if(!(sender instanceof Player)){
-					sender.sendMessage(notAplayer);
+					sender.sendMessage(this.notAplayer);
 					return true;
 				}
 				if(!sender.hasPermission("sortal.setprice")){
-					sender.sendMessage(noPerm);
+					sender.sendMessage(this.noPerm);
 					return true;
 				}
 				if(args.length == 1){
-					if(cost.containsKey((Player)sender)){
+					if(this.cost.containsKey((Player)sender)){
 						sender.sendMessage("No longer setting a cost!");
-						cost.remove((Player)sender);
+						this.cost.remove((Player)sender);
 						return true;
 					}
 					sender.sendMessage("You must also give a price!");
@@ -757,10 +770,10 @@ public class Main extends JavaPlugin{
 			if(args[0].equalsIgnoreCase("unregister")){
 				if(sender instanceof Player){
 					if(!sender.hasPermission("sortal.unregister")){
-						sender.sendMessage(noPerm);
+						sender.sendMessage(this.noPerm);
 						return true;
 					}
-					unregister((Player)sender);
+					this.unregister((Player)sender);
 					return true;
 				}else{
 					sender.sendMessage("You have to be a player to do this!");
@@ -771,46 +784,46 @@ public class Main extends JavaPlugin{
 		return false;
 	}
 	private void unregister(Player player){
-		if(unreg.containsKey(player)){
+		if(this.unreg.containsKey(player)){
 			player.sendMessage("No longer unregistering a sign!");
-			unreg.remove(player);
+			this.unreg.remove(player);
 		}else{
-			unreg.put(player, null);
+			this.unreg.put(player, null);
 			player.sendMessage("Now punch the sign you want to unregister!");
 		}
 	}
 	private void setPrice(Player player, String string) {
-		if(cost.containsKey(player)){
+		if(this.cost.containsKey(player)){
 			player.sendMessage("No longer settign a price.");
-			cost.remove(player);
+			this.cost.remove(player);
 		}else{
-			cost.put(player, Integer.parseInt(string));
+			this.cost.put(player, Integer.parseInt(string));
 			player.sendMessage("Now punch the sign you wish to cost " + string + "!");
 		}
 	}
 
 	private void register(Player player, String string) {
-		if(register.containsKey(player)){
+		if(this.register.containsKey(player)){
 			if(string.equalsIgnoreCase(register.get(player))){
 				player.sendMessage("No longer registering warp " + register.get(player));
-				register.remove(player);
+				this.register.remove(player);
 			}else{
 				player.sendMessage("Already registering a warp: " + register.get(player));
 				player.sendMessage("To stop registering, type /sortal register");
 			}
 		}else{
-			register.put(player, string);
+			this.register.put(player, string);
 			player.sendMessage("Now punch the sign you wish to be pointing at " + string + "!");
 		}
 	}
 
 	private String warpDeleted(String name) {
-		String get = warpDeleted.replace("WARPNAME", name);
+		String get = this.warpDeleted.replace("WARPNAME", name);
 		return get;
 	}
 
 	private String warpCreated(String name) {
-		String get = warpCreated.replace("WARPNAME", name);
+		String get = this.warpCreated.replace("WARPNAME", name);
 		return get;
 	}
 }
