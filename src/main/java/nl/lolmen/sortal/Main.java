@@ -434,7 +434,7 @@ public class Main extends JavaPlugin{
 				this.log.info("[Sortal] Hooked into Vault!");
 				return;
 			}else{
-				this.log.info("[Sortal] iConomy found but not used due to settings");
+				this.log.info("[Sortal] Vault found but not used due to settings");
 			}
 		}
 	}
