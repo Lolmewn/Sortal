@@ -792,10 +792,9 @@ public class Main extends JavaPlugin{
 					}
 					this.unregister((Player)sender);
 					return true;
-				}else{
-					sender.sendMessage("You have to be a player to do this!");
-					return true;
 				}
+				sender.sendMessage(this.notAplayer);
+				return true;
 			}
 		}
 		return false;
