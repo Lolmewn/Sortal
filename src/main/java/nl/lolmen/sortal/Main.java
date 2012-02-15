@@ -33,7 +33,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin{
-	
+
 	public Logger log = Logger.getLogger("Minecraft");
 	public String maindir = "plugins/Sortal/";
 	public File settings = new File(maindir + "settings.yml");
@@ -52,10 +52,10 @@ public class Main extends JavaPlugin{
 	public SPlayerListener player = new SPlayerListener(this);
 	//public MySQL mysql;
 	//public SQLite sql;
-	
+
 	//Economy Plugins
 	//public iConomy iCo;
-	
+
 	//Settings
 	public boolean usePerm;
 	public boolean useVault;
@@ -87,7 +87,7 @@ public class Main extends JavaPlugin{
 	private boolean updateAvailable;
 	private double start;
 	private double end;
-	
+
 	private boolean converting;
 	HashMap<String, String> map = new HashMap<String, String>();
 
@@ -170,27 +170,27 @@ public class Main extends JavaPlugin{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void loadSigns() {
 		//if(!useSQL && !useMySQL){
-			try {
-				if(!this.locs.exists()){
-					this.locs.createNewFile();
-					return;
-				}
-				this.log.info(logPrefix + "Starting to load signs..");
-				BufferedReader in1 = new BufferedReader(new FileReader(this.locs));
-				String str;
-				while ((str = in1.readLine()) != null){
-					processLocs(str);
-				}
-				in1.close();
-				this.log.info(this.logPrefix + Integer.toString(this.loc.size()) + " signs loaded!");
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+		try {
+			if(!this.locs.exists()){
+				this.locs.createNewFile();
+				return;
 			}
+			this.log.info(logPrefix + "Starting to load signs..");
+			BufferedReader in1 = new BufferedReader(new FileReader(this.locs));
+			String str;
+			while ((str = in1.readLine()) != null){
+				processLocs(str);
+			}
+			in1.close();
+			this.log.info(this.logPrefix + Integer.toString(this.loc.size()) + " signs loaded!");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		//}
 		/*if(useSQL){
 			if(sql.checkConnection()){
@@ -285,27 +285,27 @@ public class Main extends JavaPlugin{
 
 	private void loadWarps() {
 		//if(!useSQL && !useMySQL){
-			try {
-				if(!this.warps.exists()){
-					this.warps.createNewFile();
+		try {
+			if(!this.warps.exists()){
+				this.warps.createNewFile();
+				return;
+			}
+			this.log.info(logPrefix + "Starting to load warps..");
+			BufferedReader in1 = new BufferedReader(new FileReader(warps));
+			String str;
+			while ((str = in1.readLine()) != null){
+				if(!this.converting){
+					this.process(str);
+				}else{
+					this.converting = false;
+					this.convert();
 					return;
 				}
-				this.log.info(logPrefix + "Starting to load warps..");
-				BufferedReader in1 = new BufferedReader(new FileReader(warps));
-				String str;
-				while ((str = in1.readLine()) != null){
-					if(!this.converting){
-						this.process(str);
-					}else{
-						this.converting = false;
-						this.convert();
-						return;
-					}
-				}
-				in1.close();
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+			in1.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		//}
 		/*if(useSQL){
 			if(sql.checkConnection()){
@@ -364,25 +364,25 @@ public class Main extends JavaPlugin{
 			return;
 		}
 		String[] split = str.split("=");
-	    String warp = split[0];
-	    String[] restsplit = split[1].split(",");
-	    if(isInt(restsplit[0])){
-	    	this.log.info(this.logPrefix + "You seem to have an old version of warps.txt! Converting!");
-	    	this.converting = true;
-	    }else{
-	    	if(restsplit.length == 4){
-	    		String wname = restsplit[0];
-		    	double x = Double.parseDouble(restsplit[1]);
-	    		double y = Double.parseDouble(restsplit[2]);
-	    		double z = Double.parseDouble(restsplit[3]);
-	    		this.warp.put(warp, new Warp(this, warp, getServer().getWorld(wname), x, y, z));
-	    		if(this.showLoaded){
-	    			this.log.info(this.logPrefix + "Warp " + warp + " loaded!");
-	    		}
-	    	}else{
-	    		this.log.info(this.logPrefix + "A Warp couldn't be loaded!");
-	    	}
-	    }
+		String warp = split[0];
+		String[] restsplit = split[1].split(",");
+		if(isInt(restsplit[0])){
+			this.log.info(this.logPrefix + "You seem to have an old version of warps.txt! Converting!");
+			this.converting = true;
+		}else{
+			if(restsplit.length == 4){
+				String wname = restsplit[0];
+				double x = Double.parseDouble(restsplit[1]);
+				double y = Double.parseDouble(restsplit[2]);
+				double z = Double.parseDouble(restsplit[3]);
+				this.warp.put(warp, new Warp(this, warp, getServer().getWorld(wname), x, y, z));
+				if(this.showLoaded){
+					this.log.info(this.logPrefix + "Warp " + warp + " loaded!");
+				}
+			}else{
+				this.log.info(this.logPrefix + "A Warp couldn't be loaded!");
+			}
+		}
 	}
 	private void convert() {
 		File f = new File(this.maindir + "warps_old.txt");
@@ -413,17 +413,17 @@ public class Main extends JavaPlugin{
 			return;
 		}
 		String[] split = str.split("=");
-	    String warp = split[0];
-	    String[] restsplit = split[1].split(",");
-	    if(restsplit.length == 3){
-	    	//No world specified, defaulting to "world"
-	    	String back = "world," + split[1];
-	    	this.map.put(warp, back);
-	    }
-	    if(restsplit.length == 4){
-	    	String back = restsplit[3] + "," + restsplit[0] + "," + restsplit[1] + "," + restsplit[2];
-	    	this.map.put(warp, back);
-	    }
+		String warp = split[0];
+		String[] restsplit = split[1].split(",");
+		if(restsplit.length == 3){
+			//No world specified, defaulting to "world"
+			String back = "world," + split[1];
+			this.map.put(warp, back);
+		}
+		if(restsplit.length == 4){
+			String back = restsplit[3] + "," + restsplit[0] + "," + restsplit[1] + "," + restsplit[2];
+			this.map.put(warp, back);
+		}
 	}
 
 	private void loadPlugins() {
@@ -438,7 +438,7 @@ public class Main extends JavaPlugin{
 			this.log.info("[Sortal] Vault not found, please download: http://dev.bukkit.org/server-mods/vault/files/");
 		}
 	}
-	
+
 
 	private void loadDB() {
 		/*if(!useMySQL && !useSQL){
@@ -477,7 +477,7 @@ public class Main extends JavaPlugin{
 	private void loadSettings() {
 		YamlConfiguration c = new YamlConfiguration();
 		try{
-			c.load(settings);
+			c.load(this.settings);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -517,7 +517,7 @@ public class Main extends JavaPlugin{
 		}
 		this.showLoaded = c.getBoolean("showWhenWarpGetsLoaded", true);
 		try {
-			c.save(settings);
+			c.save(this.settings);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -530,7 +530,7 @@ public class Main extends JavaPlugin{
 				this.log.info(this.logPrefix + "Trying to create default config...");
 				try {
 					File efile = new File(this.maindir, "settings.yml");
-					
+
 					InputStream in = this.getClass().getClassLoader().getResourceAsStream("settings.yml");
 					OutputStream out = new BufferedOutputStream(new FileOutputStream(efile));
 					int c;
@@ -550,7 +550,7 @@ public class Main extends JavaPlugin{
 			}
 		}
 	}
-	
+
 	public boolean isInt(String i) {
 		try {
 			Integer.parseInt(i);
@@ -592,7 +592,7 @@ public class Main extends JavaPlugin{
 						}
 						if(args.length == 2){
 							if(this.onNoCoords){
-								if(warp.containsKey(args[1])){
+								if(this.warp.containsKey(args[1])){
 									sender.sendMessage(this.nameInUse);
 									return true;
 								}
@@ -600,10 +600,9 @@ public class Main extends JavaPlugin{
 								d.saveWarp();
 								sender.sendMessage(warpCreated(args[1]));
 								return true;
-							}else{
-								sender.sendMessage(this.warpCreateCoordsForgotten);
-								return true;
 							}
+							sender.sendMessage(this.warpCreateCoordsForgotten);
+							return true;
 						}
 						if(args.length == 3){
 							if(args[2].equalsIgnoreCase("here") || args[2].equalsIgnoreCase("this")){
@@ -616,52 +615,45 @@ public class Main extends JavaPlugin{
 								sender.sendMessage(warpCreated(args[1]));
 								return true;
 							}
+							sender.sendMessage("Not sure what to do with " + args[2]);
+							return true;
+						}
+						if(args.length == 4) {
+							sender.sendMessage("Missing some arguments! /sortal " + args[0] + " x y z <world> (world is optional)");
+							return true;
 						}
 						if(args.length > 4){
 							if(this.warp.containsKey(args[1])){
 								sender.sendMessage(this.nameInUse);
 								return true;
 							}
-							if(isInt(args[2])){
-								if(isInt(args[3])){
-									if(isInt(args[4])){
-										if(args.length == 6){
-											World w = getServer().getWorld(args[5]);
-											Warp d = new Warp(this, args[1], w, Double.parseDouble(args[2]), Double.parseDouble(args[3]), Double.parseDouble(args[4]));
-											d.saveWarp();
-											sender.sendMessage(warpCreated(args[1]));
-											return true;
-										}else{
-											World w = ((Player)sender).getWorld();
-											Warp d = new Warp(this, args[1], w, Double.parseDouble(args[2]), Double.parseDouble(args[3]), Double.parseDouble(args[4]));
-											d.saveWarp();
-											sender.sendMessage(warpCreated(args[1]));
-											return true;
-										}
-										
-									}else{
-										sender.sendMessage("Error: Number expected, String given");
-										return true;
-									}
-								}else{
-									sender.sendMessage("Error: Number expected, String given");
+							if(isInt(args[2]) && isInt(args[3]) && isInt(args[4])){
+								if(args.length == 6){
+									World w = getServer().getWorld(args[5]);
+									Warp d = new Warp(this, args[1], w, Double.parseDouble(args[2]), Double.parseDouble(args[3]), Double.parseDouble(args[4]));
+									d.saveWarp();
+									sender.sendMessage(this.warpCreated(args[1]));
 									return true;
 								}
-							}else{
-								sender.sendMessage("Error: Number expected, String given");
+								World w = ((Player)sender).getWorld();
+								Warp d = new Warp(this, args[1], w, Double.parseDouble(args[2]), Double.parseDouble(args[3]), Double.parseDouble(args[4]));
+								d.saveWarp();
+								sender.sendMessage(this.warpCreated(args[1]));
 								return true;
 							}
+							sender.sendMessage("Error: Number expected, String given");
+							return true;
 						}
 						sender.sendMessage("Too little or too many arguments! Try /sortal setwarp " + args[1] + " here");
 						return true;
-					}else{
-						sender.sendMessage(this.noPerm);
-						return true;
 					}
-				}else{
-					sender.sendMessage(this.notAplayer);
+					sender.sendMessage(this.noPerm);
 					return true;
+
 				}
+				sender.sendMessage(this.notAplayer);
+				return true;
+
 			}
 			if(args[0].equalsIgnoreCase("delwarp")){
 				if(sender.hasPermission("sortal.delwarp")){
@@ -753,7 +745,7 @@ public class Main extends JavaPlugin{
 					return true;
 				}
 				if(args.length == 1){
-					
+
 					if(this.register.containsKey((Player)sender)){
 						sender.sendMessage("No longer registering warp " + this.register.get((Player)sender));
 						this.register.remove(((Player)sender));
