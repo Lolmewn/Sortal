@@ -685,7 +685,7 @@ public class Main extends JavaPlugin{
 					sender.sendMessage(ChatColor.GRAY + "Page 1/" + ((int)this.warp.size() / 9 + 1) + ChatColor.GREEN + " Warps: " + ChatColor.RED + Integer.toString(warp.size()));
 					int count = 1;
 					for(String entry: this.warp.keySet()){
-						if(count >= 9){
+						if(count > 9){
 							return true;
 						}
 						Warp d = this.warp.get(entry);
