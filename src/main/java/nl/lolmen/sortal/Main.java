@@ -661,20 +661,19 @@ public class Main extends JavaPlugin{
 						sender.sendMessage(this.warpDeleteNameForgotten);
 						return true;
 					}
-					if(args.length == 2){
-						if(this.warp.containsKey(args[1])){
-							Warp d = this.warp.get(args[1]);
+					for(int i = 1; i < args.length;){
+						i++;
+						if(this.warp.containsKey(args[i])){
+							Warp d = this.warp.get(args[i]);
 							if(d.delWarp()){
-								sender.sendMessage(warpDeleted(args[1]));
-								return true;
-							}else{
-								sender.sendMessage("An error occured while deleting!");
+								sender.sendMessage(warpDeleted(args[i]));
 								return true;
 							}
-						}else{
-							sender.sendMessage(this.warpDoesNotExist);
+							sender.sendMessage("An error occured while deleting!");
 							return true;
 						}
+						sender.sendMessage(this.warpDoesNotExist);
+						return true;
 					}
 				}else{
 					sender.sendMessage(this.noPerm);
