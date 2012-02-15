@@ -28,7 +28,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -719,8 +718,7 @@ public class Main extends JavaPlugin{
 				return true;
 			}
 			if(args[0].equalsIgnoreCase("version")){
-				PluginDescriptionFile pdfFile = this.getDescription();
-				sender.sendMessage("[Sortal] Version is " + pdfFile.getVersion());
+				sender.sendMessage("[Sortal] Version is " + this.version);
 				return true;
 			}
 			if(args[0].equalsIgnoreCase("help")){
