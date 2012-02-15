@@ -356,7 +356,7 @@ public class Main extends JavaPlugin{
 			}
 		}*/
 
-			this.log.info(this.logPrefix + Integer.toString(this.warp.size()) + " warps loaded!");
+		this.log.info(this.logPrefix + Integer.toString(this.warp.size()) + " warps loaded!");
 	}
 
 	private void process(String str) {
@@ -377,27 +377,27 @@ public class Main extends JavaPlugin{
 	    		double z = Double.parseDouble(restsplit[3]);
 	    		this.warp.put(warp, new Warp(this, warp, getServer().getWorld(wname), x, y, z));
 	    		if(this.showLoaded){
-	    			this.log.info(logPrefix + "Warp " + warp + " loaded!");
+	    			this.log.info(this.logPrefix + "Warp " + warp + " loaded!");
 	    		}
 	    	}else{
-	    		this.log.info(logPrefix + "A Warp couldn't be loaded!");
+	    		this.log.info(this.logPrefix + "A Warp couldn't be loaded!");
 	    	}
 	    }
 	}
 	private void convert() {
-		File f = new File(maindir + "warps_old.txt");
+		File f = new File(this.maindir + "warps_old.txt");
 		this.warps.renameTo(f);
 		BufferedReader in1;
 		try {
-			in1 = new BufferedReader(new FileReader(warps));
+			in1 = new BufferedReader(new FileReader(this.warps));
 			String str;
 			while ((str = in1.readLine()) != null){
-				convertLine(str);
+				this.convertLine(str);
 			}
 			Properties prop = new Properties();
 			new File(this.maindir + "warps.txt").createNewFile();
 			prop.putAll(this.map);
-			FileOutputStream out = new FileOutputStream(new File(maindir + "warps.txt"));
+			FileOutputStream out = new FileOutputStream(new File(this.maindir + "warps.txt"));
 			prop.store(out, "[WarpName]=[World],[X],[Y],[Z]");
 			in1.close();
 			out.flush();
@@ -427,15 +427,15 @@ public class Main extends JavaPlugin{
 	}
 
 	private void loadPlugins() {
-		Plugin test;
-		test = getServer().getPluginManager().getPlugin("Vault");
+		Plugin test = getServer().getPluginManager().getPlugin("Vault");
 		if(test != null){
 			if(this.useVault){
 				this.log.info("[Sortal] Hooked into Vault!");
-				return;
 			}else{
 				this.log.info("[Sortal] Vault found but not used due to settings");
 			}
+		}else if(this.useVault){
+			this.log.info("[Sortal] Vault not found, please download: http://dev.bukkit.org/server-mods/vault/files/");
 		}
 	}
 	
