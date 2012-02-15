@@ -682,7 +682,7 @@ public class Main extends JavaPlugin{
 			}
 			if(args[0].equalsIgnoreCase("list")){
 				if(args.length == 1){
-					sender.sendMessage(ChatColor.GRAY + "Page 1/" + ((int)this.warp.size() / 9 + 1) + ChatColor.GREEN + "Warps: " + ChatColor.RED + Integer.toString(warp.size()));
+					sender.sendMessage(ChatColor.GRAY + "Page 1/" + ((int)this.warp.size() / 9 + 1) + ChatColor.GREEN + " Warps: " + ChatColor.RED + Integer.toString(warp.size()));
 					int count = 1;
 					for(String entry: this.warp.keySet()){
 						if(count >= 9){
@@ -702,7 +702,7 @@ public class Main extends JavaPlugin{
 					sender.sendMessage("No page " + args[1] + " available!");
 					return true;
 				}
-				sender.sendMessage(ChatColor.GRAY + "Page " + args[1] + "/" + ((int)this.warp.size() / 9 + 1) + ChatColor.GREEN + "Warps: " + ChatColor.RED + Integer.toString(warp.size()));
+				sender.sendMessage(ChatColor.GRAY + "Page " + args[1] + "/" + ((int)this.warp.size() / 9 + 1) + ChatColor.GREEN + " Warps: " + ChatColor.RED + Integer.toString(warp.size()));
 				int count = 1;
 				for(String entry: this.warp.keySet()){
 					if(count >= 9 * Integer.parseInt(args[1])){
