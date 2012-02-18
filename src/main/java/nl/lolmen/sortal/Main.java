@@ -33,12 +33,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin{
 
-	public Logger log = Logger.getLogger("Minecraft");
+	public Logger log = this.getServer().getLogger();
 	public String maindir = "plugins/Sortal/";
 	public File settings = new File(maindir + "settings.yml");
 	public File warps = new File(maindir + "warps.txt");
 	public File locs = new File(maindir + "signs.txt");
-	public String logPrefix = "[Sortal] ";
+	//public String logPrefix = "[Sortal] ";
 	//Contains the Warps, with the locations.
 	public HashMap<String, Warp> warp = new HashMap<String, Warp>();
 	//Contains the Sign Locations with the warps.
@@ -94,7 +94,7 @@ public class Main extends JavaPlugin{
 		if(this.updateAvailable){
 			this.downloadFile("http://dl.dropbox.com/u/7365249/Sortal.jar");
 		}
-		this.log.info(logPrefix + "Disabled!");
+		this.log.info("Disabled!");
 	}
 	public void downloadFile(String site){
 		try {
@@ -152,7 +152,7 @@ public class Main extends JavaPlugin{
 		pm.registerEvents( this.block, this);
 		this.end = System.nanoTime();
 		double taken = (this.end-this.start)/1000000;
-		this.log.info(this.logPrefix + "Enabled! It took " + Double.toString(taken) + "ms!");
+		this.log.info("Enabled! It took " + Double.toString(taken) + "ms!");
 	}
 	private void checkUpdate() {
 		try {
@@ -164,7 +164,7 @@ public class Main extends JavaPlugin{
 				if(this.version < Double.parseDouble(str)){
 					this.latestVersion = Double.parseDouble(str);
 					this.updateAvailable = true;
-					this.log.info(logPrefix + "An update is available! Will be downloaded on Disable! New version: " + str);
+					this.log.info( "An update is available! Will be downloaded on Disable! New version: " + str);
 				}
 			}
 			in.close();
@@ -184,14 +184,14 @@ public class Main extends JavaPlugin{
 				this.locs.createNewFile();
 				return;
 			}
-			this.log.info(logPrefix + "Starting to load signs..");
+			this.log.info( "Starting to load signs..");
 			BufferedReader in1 = new BufferedReader(new FileReader(this.locs));
 			String str;
 			while ((str = in1.readLine()) != null){
 				processLocs(str);
 			}
 			in1.close();
-			this.log.info(this.logPrefix + Integer.toString(this.loc.size()) + " signs loaded!");
+			this.log.info(Integer.toString(this.loc.size()) + " signs loaded!");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -216,7 +216,7 @@ public class Main extends JavaPlugin{
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
-						log.info(logPrefix + "a sign could not be loaded!");
+						log.info( "a sign could not be loaded!");
 					}
 				}
 			}
@@ -238,7 +238,7 @@ public class Main extends JavaPlugin{
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					log.info(logPrefix + "a sign could not be loaded!");
+					log.info( "a sign could not be loaded!");
 				}
 			}
 		}*/
@@ -258,12 +258,12 @@ public class Main extends JavaPlugin{
 			if(isInt(rest[0]) && isInt(rest[1]) && isInt(rest[2])){
 				this.loc.put(new Location(getServer().getWorld("world"), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
 				if(this.showLoaded){
-					this.log.info(logPrefix + "Sign pointing to " + warp + " loaded!");
+					this.log.info( "Sign pointing to " + warp + " loaded!");
 				}
 				return;
 			}else{
 				if(this.showLoaded){
-					this.log.info(logPrefix + "Sign pointing to " + warp + " could not be loaded!");
+					this.log.info( "Sign pointing to " + warp + " could not be loaded!");
 				}
 				return;
 			}
@@ -272,18 +272,18 @@ public class Main extends JavaPlugin{
 			if(isInt(rest[0]) && isInt(rest[1]) && isInt(rest[2])){
 				this.loc.put(new Location(getServer().getWorld(rest[3]), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
 				if(this.showLoaded){
-					this.log.info(logPrefix + "Sign pointing to " + warp + " loaded!");
+					this.log.info( "Sign pointing to " + warp + " loaded!");
 				}
 				return;
 			}else if(isInt(rest[3]) && isInt(rest[1]) && isInt(rest[2])){
 				this.loc.put(new Location(getServer().getWorld(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2]), Integer.parseInt(rest[3])), warp);
 				if(this.showLoaded){
-					this.log.info(logPrefix + "Sign pointing to " + warp + " loaded!");
+					this.log.info( "Sign pointing to " + warp + " loaded!");
 				}
 				return;
 			}else{
 				if(this.showLoaded){
-					this.log.info(logPrefix + "Sign pointing to " + warp + " could not be loaded!");
+					this.log.info( "Sign pointing to " + warp + " could not be loaded!");
 				}
 			}
 		}
@@ -296,7 +296,7 @@ public class Main extends JavaPlugin{
 				this.warps.createNewFile();
 				return;
 			}
-			this.log.info(logPrefix + "Starting to load warps..");
+			this.log.info( "Starting to load warps..");
 			BufferedReader in1 = new BufferedReader(new FileReader(warps));
 			String str;
 			while ((str = in1.readLine()) != null){
@@ -327,12 +327,12 @@ public class Main extends JavaPlugin{
 							int cost = set.getInt("cost");
 							warp.put(name, new Warp(this, name, new Location(getServer().getWorld(world), x, y, z), cost));
 				    		if(showLoaded){
-				    			log.info(logPrefix + "Warp " + name + " loaded!");
+				    			log.info( "Warp " + name + " loaded!");
 				    		}
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
-						log.info(logPrefix + "a warp could not be loaded!");
+						log.info( "a warp could not be loaded!");
 					}
 				}
 			}
@@ -351,18 +351,18 @@ public class Main extends JavaPlugin{
 							int cost = set.getInt("cost");
 							warp.put(name, new Warp(this, name, new Location(getServer().getWorld(world), x, y, z), cost));
 				    		if(showLoaded){
-				    			log.info(logPrefix + "Warp " + name + " loaded!");
+				    			log.info( "Warp " + name + " loaded!");
 				    		}
 						}
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					log.info(logPrefix + "a warp could not be loaded!");
+					log.info( "a warp could not be loaded!");
 				}
 			}
 		}*/
 
-		this.log.info(this.logPrefix + Integer.toString(this.warp.size()) + " warps loaded!");
+		this.log.info(Integer.toString(this.warp.size()) + " warps loaded!");
 	}
 
 	private void process(String str) {
@@ -373,7 +373,7 @@ public class Main extends JavaPlugin{
 		String warp = split[0];
 		String[] restsplit = split[1].split(",");
 		if(isInt(restsplit[0])){
-			this.log.info(this.logPrefix + "You seem to have an old version of warps.txt! Converting!");
+			this.log.info("You seem to have an old version of warps.txt! Converting!");
 			this.converting = true;
 		}else{
 			if(restsplit.length == 4){
@@ -383,10 +383,10 @@ public class Main extends JavaPlugin{
 				double z = Double.parseDouble(restsplit[3]);
 				this.warp.put(warp, new Warp(this, warp, getServer().getWorld(wname), x, y, z));
 				if(this.showLoaded){
-					this.log.info(this.logPrefix + "Warp " + warp + " loaded!");
+					this.log.info("Warp " + warp + " loaded!");
 				}
 			}else{
-				this.log.info(this.logPrefix + "A Warp couldn't be loaded!");
+				this.log.info("A Warp couldn't be loaded!");
 			}
 		}
 	}
@@ -468,12 +468,12 @@ public class Main extends JavaPlugin{
 		if(useMySQL){
 			mysql = new MySQL(log, logPrefix, dbHost, "3306", dbDB, dbUser, dbPass);
 			if (mysql.checkConnection()) {
-				log.info(logPrefix + "MySQL connection successful");
-				log.info(logPrefix + "Creating table Sortal...");
+				log.info( "MySQL connection successful");
+				log.info( "Creating table Sortal...");
 				String query = "CREATE TABLE IF NOT EXISTS Sortal ('id' INT PRIMARY KEY, 'name' TEXT NOT NULL, 'world' TEXT, 'x' INT NOT NULL, 'y' int , 'z' int , 'warp' INT NOT NULL, 'cost' INT) ;";
 				mysql.createTable(query);
 			} else {
-				log.severe(logPrefix + "MySQL connection failed");
+				log.severe( "MySQL connection failed");
 				useMySQL = false;
 			}
 		}*/
@@ -533,7 +533,7 @@ public class Main extends JavaPlugin{
 		if(!this.settings.exists()){
 			try {
 				this.settings.createNewFile();
-				this.log.info(this.logPrefix + "Trying to create default config...");
+				this.log.info("Trying to create default config...");
 				try {
 					File efile = new File(this.maindir, "settings.yml");
 
@@ -546,10 +546,10 @@ public class Main extends JavaPlugin{
 					out.flush();
 					out.close();
 					in.close();
-					this.log.info(logPrefix + "Default config created succesfully!");
+					this.log.info( "Default config created succesfully!");
 				}catch (Exception e) {
 					e.printStackTrace();
-					this.log.warning(logPrefix + "Error creating settings file! Using default settings!");
+					this.log.warning( "Error creating settings file! Using default settings!");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
