@@ -26,7 +26,7 @@ public class SBlockListener implements Listener{
 		for(int i = 0; i<event.getLines().length; i++){
 			if(event.getLine(i).toLowerCase().contains("[sortal]") || event.getLine(i).toLowerCase().contains(plugin.signContains)){
 				if(event.getPlayer().hasPermission("sortal.placesign")){
-					plugin.log.info("[Sortal] Sign placed by " + p.getDisplayName() + ", AKA " + p.getName() + "!");
+					plugin.log.info("Sign placed by " + p.getDisplayName() + ", AKA " + p.getName() + "!");
 				}else{
 					p.sendMessage("You are not allowed to place a [Sortal] sign!");
 					event.setCancelled(true);
