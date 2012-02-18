@@ -437,12 +437,12 @@ public class Main extends JavaPlugin{
 		Plugin test = getServer().getPluginManager().getPlugin("Vault");
 		if(test != null){
 			if(this.useVault){
-				this.log.info("[Sortal] Hooked into Vault!");
+				this.log.info("Hooked into Vault!");
 			}else{
-				this.log.info("[Sortal] Vault found but not used due to settings");
+				this.log.info("Vault found but not used due to settings");
 			}
 		}else if(this.useVault){
-			this.log.info("[Sortal] Vault not found, please download: http://dev.bukkit.org/server-mods/vault/files/");
+			this.log.info("Vault not found, please download: http://dev.bukkit.org/server-mods/vault/files/");
 		}
 	}
 
