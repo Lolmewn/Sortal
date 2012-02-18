@@ -136,10 +136,10 @@ public class Main extends JavaPlugin{
 		this.loadSettings();
 		try {
 			new Metrics().beginMeasuringPlugin(this);
-			this.log.info("[Sortal] Metrics loaded! View them @ http://metrics.griefcraft.com/plugin/Sortal");
+			this.log.info("Metrics loaded! View them @ http://metrics.griefcraft.com/plugin/Sortal");
 		} catch (IOException e) {
 			e.printStackTrace();
-			this.log.info("[Sortal] Failed to load Metrics!");
+			this.log.info("Failed to load Metrics!");
 		}
 		if(this.update){
 			this.checkUpdate();
@@ -165,7 +165,7 @@ public class Main extends JavaPlugin{
 				if(this.version < Double.parseDouble(str)){
 					this.latestVersion = Double.parseDouble(str);
 					this.updateAvailable = true;
-					this.log.info( "An update is available! Will be downloaded on Disable! New version: " + str);
+					this.log.info("An update is available! Will be downloaded on Disable! New version: " + str);
 				}
 			}
 			in.close();
@@ -185,7 +185,7 @@ public class Main extends JavaPlugin{
 				this.locs.createNewFile();
 				return;
 			}
-			this.log.info( "Starting to load signs..");
+			this.log.info("Starting to load signs..");
 			BufferedReader in1 = new BufferedReader(new FileReader(this.locs));
 			String str;
 			while ((str = in1.readLine()) != null){
@@ -217,7 +217,7 @@ public class Main extends JavaPlugin{
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
-						log.info( "a sign could not be loaded!");
+						log.info("a sign could not be loaded!");
 					}
 				}
 			}
@@ -239,7 +239,7 @@ public class Main extends JavaPlugin{
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					log.info( "a sign could not be loaded!");
+					log.info("a sign could not be loaded!");
 				}
 			}
 		}*/
@@ -259,12 +259,12 @@ public class Main extends JavaPlugin{
 			if(isInt(rest[0]) && isInt(rest[1]) && isInt(rest[2])){
 				this.loc.put(new Location(getServer().getWorld("world"), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
 				if(this.showLoaded){
-					this.log.info( "Sign pointing to " + warp + " loaded!");
+					this.log.info("Sign pointing to " + warp + " loaded!");
 				}
 				return;
 			}else{
 				if(this.showLoaded){
-					this.log.info( "Sign pointing to " + warp + " could not be loaded!");
+					this.log.info("Sign pointing to " + warp + " could not be loaded!");
 				}
 				return;
 			}
@@ -273,18 +273,18 @@ public class Main extends JavaPlugin{
 			if(isInt(rest[0]) && isInt(rest[1]) && isInt(rest[2])){
 				this.loc.put(new Location(getServer().getWorld(rest[3]), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
 				if(this.showLoaded){
-					this.log.info( "Sign pointing to " + warp + " loaded!");
+					this.log.info("Sign pointing to " + warp + " loaded!");
 				}
 				return;
 			}else if(isInt(rest[3]) && isInt(rest[1]) && isInt(rest[2])){
 				this.loc.put(new Location(getServer().getWorld(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2]), Integer.parseInt(rest[3])), warp);
 				if(this.showLoaded){
-					this.log.info( "Sign pointing to " + warp + " loaded!");
+					this.log.info("Sign pointing to " + warp + " loaded!");
 				}
 				return;
 			}else{
 				if(this.showLoaded){
-					this.log.info( "Sign pointing to " + warp + " could not be loaded!");
+					this.log.info("Sign pointing to " + warp + " could not be loaded!");
 				}
 			}
 		}
@@ -297,7 +297,7 @@ public class Main extends JavaPlugin{
 				this.warps.createNewFile();
 				return;
 			}
-			this.log.info( "Starting to load warps..");
+			this.log.info("Starting to load warps..");
 			BufferedReader in1 = new BufferedReader(new FileReader(warps));
 			String str;
 			while ((str = in1.readLine()) != null){
@@ -328,12 +328,12 @@ public class Main extends JavaPlugin{
 							int cost = set.getInt("cost");
 							warp.put(name, new Warp(this, name, new Location(getServer().getWorld(world), x, y, z), cost));
 				    		if(showLoaded){
-				    			log.info( "Warp " + name + " loaded!");
+				    			log.info("Warp " + name + " loaded!");
 				    		}
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
-						log.info( "a warp could not be loaded!");
+						log.info("a warp could not be loaded!");
 					}
 				}
 			}
@@ -352,13 +352,13 @@ public class Main extends JavaPlugin{
 							int cost = set.getInt("cost");
 							warp.put(name, new Warp(this, name, new Location(getServer().getWorld(world), x, y, z), cost));
 				    		if(showLoaded){
-				    			log.info( "Warp " + name + " loaded!");
+				    			log.info("Warp " + name + " loaded!");
 				    		}
 						}
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					log.info( "a warp could not be loaded!");
+					log.info("a warp could not be loaded!");
 				}
 			}
 		}*/
@@ -469,12 +469,12 @@ public class Main extends JavaPlugin{
 		if(useMySQL){
 			mysql = new MySQL(log, logPrefix, dbHost, "3306", dbDB, dbUser, dbPass);
 			if (mysql.checkConnection()) {
-				log.info( "MySQL connection successful");
-				log.info( "Creating table Sortal...");
+				log.info("MySQL connection successful");
+				log.info("Creating table Sortal...");
 				String query = "CREATE TABLE IF NOT EXISTS Sortal ('id' INT PRIMARY KEY, 'name' TEXT NOT NULL, 'world' TEXT, 'x' INT NOT NULL, 'y' int , 'z' int , 'warp' INT NOT NULL, 'cost' INT) ;";
 				mysql.createTable(query);
 			} else {
-				log.severe( "MySQL connection failed");
+				log.severe("MySQL connection failed");
 				useMySQL = false;
 			}
 		}*/
@@ -547,10 +547,10 @@ public class Main extends JavaPlugin{
 					out.flush();
 					out.close();
 					in.close();
-					this.log.info( "Default config created succesfully!");
+					this.log.info("Default config created succesfully!");
 				}catch (Exception e) {
 					e.printStackTrace();
-					this.log.warning( "Error creating settings file! Using default settings!");
+					this.log.warning("Error creating settings file! Using default settings!");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
