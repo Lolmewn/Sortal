@@ -133,6 +133,13 @@ public class Main extends JavaPlugin{
 		new File(this.maindir).mkdir();
 		this.makeSettings();
 		this.loadSettings();
+		try {
+			new Metrics().beginMeasuringPlugin(this);
+			this.log.info("[Sortal] Metrics loaded! View them @ http://metrics.griefcraft.com/plugin/Sortal");
+		} catch (IOException e) {
+			e.printStackTrace();
+			this.log.info("[Sortal] Failed to load Metrics!");
+		}
 		if(this.update){
 			this.checkUpdate();
 		}
