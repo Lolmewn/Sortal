@@ -33,7 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin{
 
-	public Logger log = this.getServer().getLogger();
+	public Logger log;
 	public String maindir = "plugins/Sortal/";
 	public File settings = new File(maindir + "settings.yml");
 	public File warps = new File(maindir + "warps.txt");
@@ -130,6 +130,7 @@ public class Main extends JavaPlugin{
 
 	public void onEnable() {
 		this.start = System.nanoTime();
+		this.log = this.getLogger();
 		new File(this.maindir).mkdir();
 		this.makeSettings();
 		this.loadSettings();
