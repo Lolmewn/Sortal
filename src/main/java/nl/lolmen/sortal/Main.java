@@ -153,7 +153,7 @@ public class Main extends JavaPlugin{
 		pm.registerEvents( this.block, this);
 		this.end = System.nanoTime();
 		double taken = (this.end-this.start)/1000000;
-		this.log.info("Enabled! It took " + Double.toString(taken) + "ms!");
+		this.log.info("version " + this.version + " build " + this.getDescription().getVersion() + " enabled - took " + taken + "ms!");
 	}
 	private void checkUpdate() {
 		try {
