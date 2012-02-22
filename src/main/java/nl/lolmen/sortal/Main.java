@@ -20,6 +20,8 @@ import java.util.logging.Logger;
 //import nl.lolmen.database.MySQL;
 //import nl.lolmen.database.SQLite;
 
+import nl.lolmen.sortal.Metrics.Plotter;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -135,7 +137,28 @@ public class Main extends JavaPlugin{
 		this.makeSettings();
 		this.loadSettings();
 		try {
-			new Metrics().beginMeasuringPlugin(this);
+			Metrics m = new Metrics();
+			m.addCustomData(this, new Plotter(){
+				@Override
+				public String getColumnName() {
+					return "Total Warps created";
+				}
+				@Override
+				public int getValue() {
+					return warp.size();
+				}
+			});
+			m.addCustomData(this, new Plotter(){
+				@Override
+				public String getColumnName() {
+					return "Total Signs registered";
+				}
+				@Override
+				public int getValue() {
+					return loc.size();
+				}
+			});
+			m.beginMeasuringPlugin(this);
 			this.log.info("Metrics loaded! View them @ http://metrics.griefcraft.com/plugin/Sortal");
 		} catch (IOException e) {
 			e.printStackTrace();
