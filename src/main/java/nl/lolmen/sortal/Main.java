@@ -15,7 +15,6 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Properties;
 import java.util.logging.Logger;
 //import nl.lolmen.database.MySQL;
 //import nl.lolmen.database.SQLite;
@@ -48,18 +47,15 @@ public class Main extends JavaPlugin{
 	public HashMap<Player, String> register = new HashMap<Player, String>();
 	public HashMap<Player, Integer> cost = new HashMap<Player, Integer>();
 	public HashMap<Player, Object> unreg = new HashMap<Player, Object>();
-	public Warp Warps = new Warp(this);
-	public SBlockListener block = new SBlockListener(this);
-	public SPlayerListener player = new SPlayerListener(this);
+	private SBlockListener block = new SBlockListener(this);
+	private SPlayerListener player = new SPlayerListener(this);
 	//public MySQL mysql;
 	//public SQLite sql;
 
 	//Economy Plugins
 	//public iConomy iCo;
 
-	//Settings
-	public boolean usePerm;
-	public boolean useVault;
+	private boolean useVault;
 	public String noPerm;
 	public String warpCreateNameForgotten;
 	public String warpCreateCoordsForgotten;
@@ -88,9 +84,6 @@ public class Main extends JavaPlugin{
 	private boolean updateAvailable;
 	private double start;
 	private double end;
-
-	private boolean converting;
-	HashMap<String, String> map = new HashMap<String, String>();
 
 	public void onDisable() {
 		if(this.updateAvailable){
@@ -324,13 +317,7 @@ public class Main extends JavaPlugin{
 			BufferedReader in1 = new BufferedReader(new FileReader(warps));
 			String str;
 			while ((str = in1.readLine()) != null){
-				if(!this.converting){
-					this.process(str);
-				}else{
-					this.converting = false;
-					this.convert();
-					return;
-				}
+				this.process(str);
 			}
 			in1.close();
 		} catch (Exception e) {
@@ -397,8 +384,8 @@ public class Main extends JavaPlugin{
 		String warp = split[0];
 		String[] restsplit = split[1].split(",");
 		if(isInt(restsplit[0])){
-			this.log.info("You seem to have an old version of warps.txt! Converting!");
-			this.converting = true;
+			this.log.info("You seem to have an old version of warps.txt! Please use the following system: WARP:WORLD,X,Y,Z!");
+			return;
 		}else{
 			if(restsplit.length == 4){
 				String wname = restsplit[0];
@@ -412,47 +399,6 @@ public class Main extends JavaPlugin{
 			}else{
 				this.log.info("A Warp couldn't be loaded!");
 			}
-		}
-	}
-	private void convert() {
-		File f = new File(this.maindir + "warps_old.txt");
-		this.warps.renameTo(f);
-		BufferedReader in1;
-		try {
-			in1 = new BufferedReader(new FileReader(this.warps));
-			String str;
-			while ((str = in1.readLine()) != null){
-				this.convertLine(str);
-			}
-			Properties prop = new Properties();
-			new File(this.maindir + "warps.txt").createNewFile();
-			prop.putAll(this.map);
-			FileOutputStream out = new FileOutputStream(new File(this.maindir + "warps.txt"));
-			prop.store(out, "[WarpName]=[World],[X],[Y],[Z]");
-			in1.close();
-			out.flush();
-			out.close();
-			this.loadWarps();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void convertLine(String str) {
-		if(str.startsWith("#")){
-			return;
-		}
-		String[] split = str.split("=");
-		String warp = split[0];
-		String[] restsplit = split[1].split(",");
-		if(restsplit.length == 3){
-			//No world specified, defaulting to "world"
-			String back = "world," + split[1];
-			this.map.put(warp, back);
-		}
-		if(restsplit.length == 4){
-			String back = restsplit[3] + "," + restsplit[0] + "," + restsplit[1] + "," + restsplit[2];
-			this.map.put(warp, back);
 		}
 	}
 
@@ -515,7 +461,7 @@ public class Main extends JavaPlugin{
 		if(!c.contains("plugins.useVault")){
 			c.addDefault("plugins.useVault", true);
 		}
-		this.usePerm = c.getBoolean("plugins.usePermissions", true);
+		c.getBoolean("plugins.usePermissions", true);
 		if(!c.contains("plugins.usePermissions")){
 			c.addDefault("plugins.usePermissions", true);
 		}
