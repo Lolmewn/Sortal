@@ -55,7 +55,7 @@ public class Main extends JavaPlugin{
 	//Economy Plugins
 	//public iConomy iCo;
 
-	private boolean useVault;
+	public boolean useVault;
 	public String noPerm;
 	public String warpCreateNameForgotten;
 	public String warpCreateCoordsForgotten;
