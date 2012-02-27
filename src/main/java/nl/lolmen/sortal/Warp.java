@@ -32,11 +32,16 @@ public class Warp{
 		this.y = y;
 		this.z = z;
 	}
+	public Warp(Main main, String warp, World world, double x, double y, double z, int price){
+		this(main, warp, world, x, y, z);
+		this.cost = price;
+		this.setHasCost(true);
+	}
 	public Warp(Main main, String warp, Location loc){
 		this(main, warp, loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
 	}
 	public Warp(Main main, String warp, Location loc, int cost){
-		this(main, warp, loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
+		this(main, warp, loc);
 		this.cost = cost;
 		this.hasCost = true;
 	}

@@ -15,6 +15,8 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 //import nl.lolmen.database.MySQL;
 //import nl.lolmen.database.SQLite;
@@ -46,7 +48,7 @@ public class Main extends JavaPlugin{
 	public HashMap<Location, String> loc = new HashMap<Location, String>();
 	public HashMap<Player, String> register = new HashMap<Player, String>();
 	public HashMap<Player, Integer> cost = new HashMap<Player, Integer>();
-	public HashMap<Player, Object> unreg = new HashMap<Player, Object>();
+	public Set<Player> unreg = new HashSet<Player>();
 	private SBlockListener block = new SBlockListener(this);
 	private SPlayerListener player = new SPlayerListener(this);
 	//public MySQL mysql;
@@ -205,7 +207,48 @@ public class Main extends JavaPlugin{
 			BufferedReader in1 = new BufferedReader(new FileReader(this.locs));
 			String str;
 			while ((str = in1.readLine()) != null){
-				processLocs(str);
+				if(str.startsWith("#")){
+					return;
+				}
+				if(!str.contains("=")){
+					return;
+				}
+				String[] split = str.split("=");
+				String warp = split[1];
+				String[] rest = split[0].split(",");
+				if(rest.length == 3){
+					if(isInt(rest[0]) && isInt(rest[1]) && isInt(rest[2])){
+						this.loc.put(new Location(getServer().getWorlds().get(0), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
+						if(this.showLoaded){
+							this.log.info("Sign pointing to " + warp + " loaded!");
+						}
+						continue;
+					}else{
+						if(this.showLoaded){
+							this.log.info("Sign pointing to " + warp + " could not be loaded!");
+						}
+						continue;
+					}
+				}
+				if(rest.length == 4){
+					if(isInt(rest[0]) && isInt(rest[1]) && isInt(rest[2])){
+						this.loc.put(new Location(getServer().getWorld(rest[3]), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
+						if(this.showLoaded){
+							this.log.info("Sign pointing to " + warp + " loaded!");
+						}
+						continue;
+					}else if(isInt(rest[3]) && isInt(rest[1]) && isInt(rest[2])){
+						this.loc.put(new Location(getServer().getWorld(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2]), Integer.parseInt(rest[3])), warp);
+						if(this.showLoaded){
+							this.log.info("Sign pointing to " + warp + " loaded!");
+						}
+						continue;
+					}else{
+						if(this.showLoaded){
+							this.log.info("Sign pointing to " + warp + " could not be loaded!");
+						}
+					}
+				}
 			}
 			in1.close();
 			this.log.info(Integer.toString(this.loc.size()) + " signs loaded!");
@@ -261,51 +304,6 @@ public class Main extends JavaPlugin{
 		}*/
 	}
 
-	private void processLocs(String str) {
-		if(str.startsWith("#")){
-			return;
-		}
-		if(!str.contains("=")){
-			return;
-		}
-		String[] split = str.split("=");
-		String warp = split[1];
-		String[] rest = split[0].split(",");
-		if(rest.length == 3){
-			if(isInt(rest[0]) && isInt(rest[1]) && isInt(rest[2])){
-				this.loc.put(new Location(getServer().getWorlds().get(0), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
-				if(this.showLoaded){
-					this.log.info("Sign pointing to " + warp + " loaded!");
-				}
-				return;
-			}else{
-				if(this.showLoaded){
-					this.log.info("Sign pointing to " + warp + " could not be loaded!");
-				}
-				return;
-			}
-		}
-		if(rest.length == 4){
-			if(isInt(rest[0]) && isInt(rest[1]) && isInt(rest[2])){
-				this.loc.put(new Location(getServer().getWorld(rest[3]), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
-				if(this.showLoaded){
-					this.log.info("Sign pointing to " + warp + " loaded!");
-				}
-				return;
-			}else if(isInt(rest[3]) && isInt(rest[1]) && isInt(rest[2])){
-				this.loc.put(new Location(getServer().getWorld(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2]), Integer.parseInt(rest[3])), warp);
-				if(this.showLoaded){
-					this.log.info("Sign pointing to " + warp + " loaded!");
-				}
-				return;
-			}else{
-				if(this.showLoaded){
-					this.log.info("Sign pointing to " + warp + " could not be loaded!");
-				}
-			}
-		}
-	}
-
 	private void loadWarps() {
 		//if(!useSQL && !useMySQL){
 		try {
@@ -317,7 +315,35 @@ public class Main extends JavaPlugin{
 			BufferedReader in1 = new BufferedReader(new FileReader(warps));
 			String str;
 			while ((str = in1.readLine()) != null){
-				this.process(str);
+				if(str.startsWith("#")){
+					continue;
+				}
+				String[] split = str.split("=");
+				String warp = split[0];
+				String[] restsplit = split[1].split(",");
+				if(isInt(restsplit[0])){
+					this.log.info("You seem to have an old version of warps.txt! Please use the following system: WARP=WORLD,X,Y,Z,PRICE!");
+					continue;
+				}else{
+					if(restsplit.length == 4){
+						String wname = restsplit[0];
+						double x = Double.parseDouble(restsplit[1]);
+						double y = Double.parseDouble(restsplit[2]);
+						double z = Double.parseDouble(restsplit[3]);
+						int money;
+						if(restsplit.length == 5){
+							money = Integer.parseInt(restsplit[4]);
+						}else{
+							money = this.warpUsePrice;
+						}
+						this.warp.put(warp, new Warp(this, warp, getServer().getWorld(wname), x, y, z, money));
+						if(this.showLoaded){
+							this.log.info("Warp " + warp + " loaded!");
+						}
+					}else{
+						this.log.info("A Warp couldn't be loaded: " + warp);
+					}
+				}
 			}
 			in1.close();
 		} catch (Exception e) {
@@ -374,32 +400,6 @@ public class Main extends JavaPlugin{
 		}*/
 
 		this.log.info(Integer.toString(this.warp.size()) + " warps loaded!");
-	}
-
-	private void process(String str) {
-		if(str.startsWith("#")){
-			return;
-		}
-		String[] split = str.split("=");
-		String warp = split[0];
-		String[] restsplit = split[1].split(",");
-		if(isInt(restsplit[0])){
-			this.log.info("You seem to have an old version of warps.txt! Please use the following system: WARP:WORLD,X,Y,Z!");
-			return;
-		}else{
-			if(restsplit.length == 4){
-				String wname = restsplit[0];
-				double x = Double.parseDouble(restsplit[1]);
-				double y = Double.parseDouble(restsplit[2]);
-				double z = Double.parseDouble(restsplit[3]);
-				this.warp.put(warp, new Warp(this, warp, getServer().getWorld(wname), x, y, z));
-				if(this.showLoaded){
-					this.log.info("Warp " + warp + " loaded!");
-				}
-			}else{
-				this.log.info("A Warp couldn't be loaded!");
-			}
-		}
 	}
 
 	private void loadPlugins() {
@@ -775,11 +775,11 @@ public class Main extends JavaPlugin{
 		return false;
 	}
 	private void unregister(Player player){
-		if(this.unreg.containsKey(player)){
+		if(this.unreg.contains(player)){
 			player.sendMessage("No longer unregistering a sign!");
 			this.unreg.remove(player);
 		}else{
-			this.unreg.put(player, null);
+			this.unreg.add(player);
 			player.sendMessage("Now punch the sign you want to unregister!");
 		}
 	}

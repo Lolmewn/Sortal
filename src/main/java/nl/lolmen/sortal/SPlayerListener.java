@@ -266,7 +266,7 @@ public class SPlayerListener implements Listener{
 			}
 			return true;
 		}
-		if(plugin.unreg.containsKey(p)){
+		if(plugin.unreg.contains(p)){
 			if(plugin.loc.containsKey(b.getLocation())){
 				try {
 					Properties prop = new Properties();
