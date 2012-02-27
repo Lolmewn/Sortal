@@ -638,17 +638,17 @@ public class Main extends JavaPlugin{
 						return true;
 					}
 					for(int i = 1; i < args.length;){
-						i++;
 						if(this.warp.containsKey(args[i])){
 							Warp d = this.warp.get(args[i]);
 							if(d.delWarp()){
 								sender.sendMessage(warpDeleted(args[i]));
-								return true;
+							}else{
+								sender.sendMessage("An error occured while deleting!");
 							}
-							sender.sendMessage("An error occured while deleting!");
-							return true;
+						}else{
+							sender.sendMessage(this.warpDoesNotExist);
 						}
-						sender.sendMessage(this.warpDoesNotExist);
+						i++;
 						return true;
 					}
 				}else{
