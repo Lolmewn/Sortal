@@ -32,9 +32,8 @@ public class SBlockListener implements Listener{
 					if(this.pay(p)){
 						plugin.log.info("Sign placed by " + p.getDisplayName() + ", AKA " + p.getName() + "!");
 					}else{
-						
+						event.setCancelled(true);
 					}
-					
 				}else{
 					p.sendMessage("You are not allowed to place a [Sortal] sign!");
 					event.setCancelled(true);
