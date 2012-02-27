@@ -19,6 +19,7 @@ public class Warp{
 	private double z;
 	private Main plugin;
 	private int cost;
+	private boolean hasCost = false;
 	
 	public Warp(Main main) {
 		plugin = main;
@@ -37,6 +38,7 @@ public class Warp{
 	public Warp(Main main, String warp, Location loc, int cost){
 		this(main, warp, loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
 		this.cost = cost;
+		this.hasCost = true;
 	}
 	
 	/**
@@ -154,13 +156,6 @@ public class Warp{
 			return this.cost;
 		}
 	}
-	public double getCostDouble(){
-		if(this.cost == 0){
-			return (double)this.plugin.warpUsePrice;
-		}else{
-			return (double)this.cost;
-		}
-	}
 	public String warp(){
 		return this.warp;
 	}
@@ -177,6 +172,12 @@ public class Warp{
 		return this.z;
 	}
 	public String toString(){
-		return this.world.getName() + "," + Double.toString(this.x) + "," + Double.toString(this.y) + "," + Double.toString(this.z);
+		return this.world.getName() + "," + Double.toString(this.x) + "," + Double.toString(this.y) + "," + Double.toString(this.z) + "," + (hasCost()?getCost():0);
+	}
+	public boolean hasCost() {
+		return hasCost;
+	}
+	public void setHasCost(boolean hasCost) {
+		this.hasCost = hasCost;
 	}
 }

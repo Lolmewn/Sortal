@@ -273,7 +273,7 @@ public class Main extends JavaPlugin{
 		String[] rest = split[0].split(",");
 		if(rest.length == 3){
 			if(isInt(rest[0]) && isInt(rest[1]) && isInt(rest[2])){
-				this.loc.put(new Location(getServer().getWorld("world"), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
+				this.loc.put(new Location(getServer().getWorlds().get(0), Integer.parseInt(rest[0]), Integer.parseInt(rest[1]), Integer.parseInt(rest[2])), warp);
 				if(this.showLoaded){
 					this.log.info("Sign pointing to " + warp + " loaded!");
 				}
