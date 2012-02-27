@@ -302,11 +302,15 @@ public class SPlayerListener implements Listener{
         if(econ == null){
         	return true; //No Vault found
         }
-        if(!econ.has(p.getName(), d.getCostDouble())){
+        int money = d.getCost();
+        if(money == 0){
+        	return true;
+        }
+        if(!econ.has(p.getName(), money)){
         	return false;
         }
-        econ.withdrawPlayer(p.getName(), d.getCostDouble());
-        p.sendMessage("Withdrawing " + econ.format(d.getCostDouble()) + " from your bank!");
+        econ.withdrawPlayer(p.getName(), money);
+        p.sendMessage("Withdrawing " + econ.format(money) + " from your account!");
         return true;
 	}
 }
