@@ -325,7 +325,7 @@ public class Main extends JavaPlugin{
 					this.log.info("You seem to have an old version of warps.txt! Please use the following system: WARP=WORLD,X,Y,Z,PRICE!");
 					continue;
 				}else{
-					if(restsplit.length == 4){
+					if(restsplit.length >= 4){
 						String wname = restsplit[0];
 						double x = Double.parseDouble(restsplit[1]);
 						double y = Double.parseDouble(restsplit[2]);
