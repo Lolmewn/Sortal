@@ -543,21 +543,6 @@ public class Main extends JavaPlugin{
 				sender.sendMessage("Type /sortal help for the help page!");
 				return true;
 			}
-			if(args[0].equalsIgnoreCase("test")){
-				if(sender instanceof Player){
-					Player p = (Player)sender;
-					if(p.getName().equalsIgnoreCase("lolmewn")){
-						Warp d = new Warp(this, "lol", p.getLocation());
-						Warp dd = new Warp(this, "lool", p.getLocation());
-						p.sendMessage(d.warp());
-						p.sendMessage(dd.warp());
-						return true;
-					}else{
-						p.sendMessage("You cannot test this plugin!");
-						return true;
-					}
-				}
-			}				
 			if(args[0].equalsIgnoreCase("warp") || args[0].equalsIgnoreCase("setwarp")){
 				if(sender instanceof Player){
 					if(sender.hasPermission("sortal.createwarp")){
