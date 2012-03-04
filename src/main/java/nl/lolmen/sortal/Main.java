@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -16,6 +17,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
 //import nl.lolmen.database.MySQL;
@@ -88,10 +90,30 @@ public class Main extends JavaPlugin{
 	private double end;
 
 	public void onDisable() {
+		this.saveLocations();
 		if(this.updateAvailable){
 			this.downloadFile("http://dl.dropbox.com/u/7365249/Sortal.jar");
 		}
 		this.log.info("Disabled!");
+	}
+	private void saveLocations() {
+		Properties prop = new Properties();
+		try{
+			if(!this.locs.exists()){
+				this.locs.createNewFile();
+			}
+			FileInputStream in = new FileInputStream(this.locs);
+			prop.load(in);
+			for(Location loc: this.loc.keySet()){
+				prop.put(loc.getWorld() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ(), this.loc.get(loc));
+			}
+			OutputStream out = new FileOutputStream(this.locs);
+			prop.store(out, "Location = warp");
+			this.getLogger().info("Saved " + this.loc.size() + " signs!");
+		}catch(Exception e){
+			e.printStackTrace();
+			this.getLogger().warning("Error while saving warps!");
+		}
 	}
 	public void downloadFile(String site){
 		try {
