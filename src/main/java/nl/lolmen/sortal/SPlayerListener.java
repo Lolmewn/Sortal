@@ -170,6 +170,9 @@ public class SPlayerListener implements Listener{
 							return;
 						}
 						Warp d = plugin.warp.get(warp);
+						if(!pay(p,d)){
+							return;
+						}
 						Location goo = new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch());
 						goo.getChunk().load();
 						if(d.getWorld().equals(p.getWorld())){
