@@ -246,9 +246,7 @@ public class Main extends JavaPlugin{
 						}
 						continue;
 					}else{
-						if(this.showLoaded){
-							this.log.info("Sign pointing to " + warp + " could not be loaded!");
-						}
+						this.log.info("Sign pointing to " + warp + " could not be loaded : Integers are off, length = 3!");
 						continue;
 					}
 				}
@@ -266,9 +264,7 @@ public class Main extends JavaPlugin{
 						}
 						continue;
 					}else{
-						if(this.showLoaded){
-							this.log.info("Sign pointing to " + warp + " could not be loaded!");
-						}
+						this.log.info("Sign pointing to " + warp + " could not be loaded : Integers are off, length = 4!");
 					}
 				}
 			}
@@ -509,9 +505,9 @@ public class Main extends JavaPlugin{
 		this.onNoCoords = c.getBoolean("ifNoCoordsUsePlayerCoords", true);
 		this.signContains = c.getString("signContains", "[Sortal]");
 		this.update = c.getBoolean("auto-update", false);
-		this.version = c.getDouble("version", 4.6);
+		this.version = c.getDouble("version", 4.8);
 		if(!c.contains("version")){
-			c.addDefault("version", 4.6);
+			c.addDefault("version", 4.8);
 		}
 		this.showLoaded = c.getBoolean("showWhenWarpGetsLoaded", true);
 		try {
