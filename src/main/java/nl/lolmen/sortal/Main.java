@@ -105,7 +105,7 @@ public class Main extends JavaPlugin{
 			FileInputStream in = new FileInputStream(this.locs);
 			prop.load(in);
 			for(Location loc: this.loc.keySet()){
-				prop.put(loc.getWorld() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ(), this.loc.get(loc));
+				prop.put(loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ(), this.loc.get(loc));
 			}
 			OutputStream out = new FileOutputStream(this.locs);
 			prop.store(out, "Location = warp");
