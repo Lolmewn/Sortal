@@ -230,10 +230,10 @@ public class Main extends JavaPlugin{
 			String str;
 			while ((str = in1.readLine()) != null){
 				if(str.startsWith("#")){
-					return;
+					continue;
 				}
 				if(!str.contains("=")){
-					return;
+					continue;
 				}
 				String[] split = str.split("=");
 				String warp = split[1];
