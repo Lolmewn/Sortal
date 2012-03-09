@@ -59,18 +59,19 @@ public class SPlayerListener implements Listener{
 			}
 			if(sortalLine == -1){
 				//Always the possibility of a registered sign
-				if(!event.getPlayer().hasPermission("sortal.warp")){
-					if(plugin.isDebug()){
-						System.out.println("[Sortal - Debug] No perms.. aww");
-					}
-					p.sendMessage(plugin.noPerm);
-					return;
-				}
 				Location c = new Location(b.getWorld(), b.getX(), b.getY(), b.getZ());
 				if(plugin.isDebug()){
 					System.out.println("[Sortal - Debug] looking up location: " + c.toString() + " or " + c);
 				}
 				if(plugin.loc.containsKey(c)){
+					//It's a registered warp sign
+					if(!event.getPlayer().hasPermission("sortal.warp")){
+						if(plugin.isDebug()){
+							System.out.println("[Sortal - Debug] No perms.. aww");
+						}
+						p.sendMessage(plugin.noPerm);
+						return;
+					}
 					String warp = plugin.loc.get(c);
 					if(plugin.isDebug()){
 						System.out.println("[Sortal - Debug] Found it, warp=" + warp);
