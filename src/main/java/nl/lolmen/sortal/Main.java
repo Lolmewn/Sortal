@@ -427,9 +427,11 @@ public class Main extends JavaPlugin{
 				this.log.info("Hooked into Vault!");
 			}else{
 				this.log.info("Vault found but not used due to settings");
+				this.useVault = false;
 			}
 		}else if(this.useVault){
 			this.log.info("Vault not found, please download: http://dev.bukkit.org/server-mods/vault/files/");
+			this.useVault = false;
 		}
 	}
 
