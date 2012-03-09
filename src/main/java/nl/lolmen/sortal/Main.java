@@ -357,10 +357,10 @@ public class Main extends JavaPlugin{
 		this.onNoCoords = c.getBoolean("ifNoCoordsUsePlayerCoords", true);
 		this.signContains = c.getString("signContains", "[Sortal]");
 		this.update = c.getBoolean("auto-update", false);
-		this.version = c.getDouble("version", 4.8);
+		this.version = c.getDouble("version", 4.9);
 		this.setDebug(c.getBoolean("debug", false));
 		if(!c.contains("version")){
-			c.addDefault("version", 4.8);
+			c.addDefault("version", 4.9);
 		}
 		this.showLoaded = c.getBoolean("showWhenWarpGetsLoaded", true);
 		try {
