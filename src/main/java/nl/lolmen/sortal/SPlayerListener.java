@@ -109,6 +109,10 @@ public class SPlayerListener implements Listener{
 			}
 			if(line2.startsWith("w:")){
 				if(plugin.isDebug()){
+					if(plugin.isDebug()){
+						System.out.println("[Sortal - Debug] No perms.. aww");
+					}
+					p.sendMessage(plugin.noPerm);
 					System.out.println("[Sortal - Debug] Starts with w:");
 				}
 				String[] split = line2.split(":");
