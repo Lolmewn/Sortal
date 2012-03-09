@@ -103,8 +103,14 @@ public class SPlayerListener implements Listener{
 				p.sendMessage(plugin.noPerm);
 				return;
 			}
-			String line2 = lines[sortalLine+1];
+			String line2 = (lines[sortalLine+1] == null ? "" : lines[sortalLine+1]);
+			if(plugin.isDebug()){
+				System.out.println("[Sortal - Debug] line after that: " + line2);
+			}
 			if(line2.startsWith("w:")){
+				if(plugin.isDebug()){
+					System.out.println("[Sortal - Debug] Starts with w:");
+				}
 				String[] split = line2.split(":");
 				String warp = split[1];
 				if(!plugin.warp.containsKey(warp)){
