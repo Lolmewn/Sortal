@@ -51,7 +51,7 @@ public class SPlayerListener implements Listener{
 			for(int i = 0; i < s.getLines().length; i++){
 				if(lines[i].equalsIgnoreCase("[Sortal]") || lines[i].equalsIgnoreCase(plugin.signContains)){
 					sortalLine = i;
-					return; //returns at the first sign that has [Sortal] or signContains
+					break; //returns at the first sign that has [Sortal] or signContains
 				}
 			}
 			if(plugin.isDebug()){
