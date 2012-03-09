@@ -96,8 +96,7 @@ public class SPlayerListener implements Listener{
 					}
 					p.sendMessage("You teleported to " + ChatColor.RED +  warp + "!");
 				}
-
-
+				return;
 			}
 			if(!event.getPlayer().hasPermission("sortal.warp")){
 				p.sendMessage(plugin.noPerm);
