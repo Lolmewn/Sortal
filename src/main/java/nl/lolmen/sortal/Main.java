@@ -43,7 +43,6 @@ public class Main extends JavaPlugin{
 	public File settings = new File(maindir + "settings.yml");
 	public File warps = new File(maindir + "warps.txt");
 	public File locs = new File(maindir + "signs.txt");
-	//public String logPrefix = "[Sortal] ";
 	//Contains the Warps, with the locations.
 	public HashMap<String, Warp> warp = new HashMap<String, Warp>();
 	//Contains the Sign Locations with the warps.
@@ -53,11 +52,6 @@ public class Main extends JavaPlugin{
 	public Set<Player> unreg = new HashSet<Player>();
 	private SBlockListener block = new SBlockListener(this);
 	private SPlayerListener player = new SPlayerListener(this);
-	//public MySQL mysql;
-	//public SQLite sql;
-
-	//Economy Plugins
-	//public iConomy iCo;
 
 	public boolean useVault;
 	public String noPerm;
@@ -71,12 +65,6 @@ public class Main extends JavaPlugin{
 	public String warpDeleted;
 	public String warpDoesNotExist;
 	public String notAplayer;
-	//public boolean useSQL;
-	//public boolean useMySQL;
-	//private String dbUser;
-	//private String dbPass;
-	//private String dbDB;
-	//private String dbHost;
 	public int warpCreatePrice;
 	public int warpUsePrice;
 	public boolean onNoCoords;
@@ -88,6 +76,7 @@ public class Main extends JavaPlugin{
 	private boolean updateAvailable;
 	private double start;
 	private double end;
+	private boolean debug;
 
 	public void onDisable() {
 		this.saveLocations();
@@ -184,7 +173,6 @@ public class Main extends JavaPlugin{
 		if(this.update){
 			this.checkUpdate();
 		}
-		this.loadDB();
 		this.loadWarps();
 		this.loadSigns();
 		this.loadPlugins();
@@ -219,7 +207,6 @@ public class Main extends JavaPlugin{
 	}
 
 	private void loadSigns() {
-		//if(!useSQL && !useMySQL){
 		try {
 			if(!this.locs.exists()){
 				this.locs.createNewFile();
@@ -275,55 +262,9 @@ public class Main extends JavaPlugin{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//}
-		/*if(useSQL){
-			if(sql.checkConnection()){
-				ResultSet set = sql.query("SELECT * FROM Sortal WHERE warp = 0;");
-				if(!(set == null)){
-					try {
-						while(set.next()){
-							String name = set.getString("name");
-							String world = set.getString("world");
-							int x = set.getInt("x");
-							int y = set.getInt("y");
-							int z = set.getInt("z");
-							loc.put(new Location(getServer().getWorld(world), x, y, z), name);
-							if(showLoaded){
-								log.info("Sign pointing to " + name + " loaded!");
-							}
-						}
-					} catch (SQLException e) {
-						e.printStackTrace();
-						log.info("a sign could not be loaded!");
-					}
-				}
-			}
-		}
-		if(useMySQL){
-			if(mysql.checkConnection()){
-				try {
-					ResultSet set = mysql.query("SELECT * FROM Sortal WHERE warp = 0;");
-					if(!(set == null)){
-						while(set.next()){
-							String name = set.getString("name");
-							String world = set.getString("world");
-							int x = set.getInt("x");
-							int y = set.getInt("y");
-							int z = set.getInt("z");
-							loc.put(new Location(getServer().getWorld(world), x, y, z), name);
-							log.info("Sign pointing to " + name + " loaded!");
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-					log.info("a sign could not be loaded!");
-				}
-			}
-		}*/
 	}
 
 	private void loadWarps() {
-		//if(!useSQL && !useMySQL){
 		try {
 			if(!this.warps.exists()){
 				this.warps.createNewFile();
@@ -367,56 +308,6 @@ public class Main extends JavaPlugin{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//}
-		/*if(useSQL){
-			if(sql.checkConnection()){
-				ResultSet set = sql.query("SELECT * FROM Sortal WHERE warp = 1;");
-				if(!(set == null)){
-					try {
-						while(set.next()){
-							String name = set.getString("name");
-							String world = set.getString("world");
-							int x = set.getInt("x");
-							int y = set.getInt("y");
-							int z = set.getInt("z");
-							int cost = set.getInt("cost");
-							warp.put(name, new Warp(this, name, new Location(getServer().getWorld(world), x, y, z), cost));
-				    		if(showLoaded){
-				    			log.info("Warp " + name + " loaded!");
-				    		}
-						}
-					} catch (SQLException e) {
-						e.printStackTrace();
-						log.info("a warp could not be loaded!");
-					}
-				}
-			}
-		}
-		if(useMySQL){
-			if(mysql.checkConnection()){
-				try {
-					ResultSet set = mysql.query("SELECT * FROM Sortal WHERE warp = 1;");
-					if(!(set == null)){
-						while(set.next()){
-							String name = set.getString("name");
-							String world = set.getString("world");
-							int x = set.getInt("x");
-							int y = set.getInt("y");
-							int z = set.getInt("z");
-							int cost = set.getInt("cost");
-							warp.put(name, new Warp(this, name, new Location(getServer().getWorld(world), x, y, z), cost));
-				    		if(showLoaded){
-				    			log.info("Warp " + name + " loaded!");
-				    		}
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-					log.info("a warp could not be loaded!");
-				}
-			}
-		}*/
-
 		this.log.info(Integer.toString(this.warp.size()) + " warps loaded!");
 	}
 
@@ -434,41 +325,6 @@ public class Main extends JavaPlugin{
 			this.useVault = false;
 		}
 	}
-
-
-	private void loadDB() {
-		/*if(!useMySQL && !useSQL){
-			return;
-		}
-		if(useMySQL && useSQL){
-			log.info("MySQL and SQLite are both set, but only one can be used! Using flatfile until done!");
-			useMySQL = false;
-			useSQL = false;
-			return;
-		}
-		if(useSQL){
-			sql = new SQLite(log, logPrefix, "Sortal", "plugins/Sortal/");
-			sql.checkConnection();
-			if (!sql.checkTable("Skillz")) {
-				String query = "CREATE TABLE Sortal ('id' INT PRIMARY KEY, 'name' TEXT NOT NULL, 'world' TEXT, 'x' INT NOT NULL, 'y' int , 'z' int , 'warp' INT NOT NULL, 'cost' INT) ;";
-				sql.createTable(query);
-				log.info("[Sortal] SQL Warpbase created!");
-			}
-		}
-		if(useMySQL){
-			mysql = new MySQL(log, logPrefix, dbHost, "3306", dbDB, dbUser, dbPass);
-			if (mysql.checkConnection()) {
-				log.info("MySQL connection successful");
-				log.info("Creating table Sortal...");
-				String query = "CREATE TABLE IF NOT EXISTS Sortal ('id' INT PRIMARY KEY, 'name' TEXT NOT NULL, 'world' TEXT, 'x' INT NOT NULL, 'y' int , 'z' int , 'warp' INT NOT NULL, 'cost' INT) ;";
-				mysql.createTable(query);
-			} else {
-				log.severe("MySQL connection failed");
-				useMySQL = false;
-			}
-		}*/
-	}
-
 
 	private void loadSettings() {
 		YamlConfiguration c = new YamlConfiguration();
@@ -496,18 +352,13 @@ public class Main extends JavaPlugin{
 		this.warpDeleted = c.getString("warpDeleted", "Warp WARPNAME deleted!");
 		this.warpDoesNotExist = c.getString("warpDoesNotExist", "This warp does not exist!");
 		this.notAplayer = c.getString("notAplayer", "You must be a player to use this command!");
-		//this.useSQL = c.getBoolean("useSQLite", false);
-		//this.useMySQL = c.getBoolean("useMySQL", false);
-		//this.dbUser = c.getString("MySQL.username");
-		//this.dbPass = c.getString("MySQL.password");
-		//this.dbHost = c.getString("MySQL.host");
-		//this.dbDB = c.getString("MySQL.Warpbase");
 		this.warpCreatePrice = c.getInt("warpCreatePrice", 0);
 		this.warpUsePrice = c.getInt("warpUsePrice", 0);
 		this.onNoCoords = c.getBoolean("ifNoCoordsUsePlayerCoords", true);
 		this.signContains = c.getString("signContains", "[Sortal]");
 		this.update = c.getBoolean("auto-update", false);
 		this.version = c.getDouble("version", 4.8);
+		this.setDebug(c.getBoolean("debug", false));
 		if(!c.contains("version")){
 			c.addDefault("version", 4.8);
 		}
@@ -821,6 +672,12 @@ public class Main extends JavaPlugin{
 	private String warpCreated(String name) {
 		String get = this.warpCreated.replace("WARPNAME", name);
 		return get;
+	}
+	public boolean isDebug() {
+		return debug;
+	}
+	public void setDebug(boolean debug) {
+		this.debug = debug;
 	}
 }
 
