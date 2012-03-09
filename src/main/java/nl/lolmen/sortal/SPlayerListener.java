@@ -42,6 +42,9 @@ public class SPlayerListener implements Listener{
 		}
 		Block b = event.getClickedBlock();
 		if(b.getType() == Material.SIGN_POST || b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN){
+			if(plugin.isDebug()){
+				System.out.println("[Sortal - Debug] Sign clicked");
+			}
 			Sign s = (Sign)b.getState();
 			String[] lines = s.getLines();
 			int sortalLine = - 1;
@@ -51,32 +54,50 @@ public class SPlayerListener implements Listener{
 					return; //returns at the first sign that has [Sortal] or signContains
 				}
 			}
+			if(plugin.isDebug()){
+				System.out.println("[Sortal - Debug] Line with identifier: " + sortalLine);
+			}
 			if(sortalLine == -1){
 				//Always the possibility of a registered sign
-				if(event.getPlayer().hasPermission("sortal.warp")){
-					Location c = new Location(b.getWorld(), b.getX(), b.getY(), b.getZ());
-					if(plugin.loc.containsKey(c)){
-						String warp = plugin.loc.get(c);
-						if(!plugin.warp.containsKey(warp)){
-							p.sendMessage("[Sortal] This sign pointer is broken! Ask an Admin to fix it!");
-							return;
-						}
-						Warp d = plugin.warp.get(warp);
-						if(!pay(p,d)){
-							return;
-						}
-						Location goo = new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch());
-						goo.getChunk().load();
-						if(d.getWorld().getName().equals(p.getWorld().getName())){
-							p.teleport(goo);
-						}else{
-							p.teleport(goo);
-							p.teleport(goo);
-						}
-						p.sendMessage("You teleported to " + ChatColor.RED +  warp + "!");
+				if(!event.getPlayer().hasPermission("sortal.warp")){
+					if(plugin.isDebug()){
+						System.out.println("[Sortal - Debug] No perms.. aww");
 					}
+					p.sendMessage(plugin.noPerm);
+					return;
 				}
-				return;
+				Location c = new Location(b.getWorld(), b.getX(), b.getY(), b.getZ());
+				if(plugin.isDebug()){
+					System.out.println("[Sortal - Debug] looking up location: " + c.toString() + " or " + c);
+				}
+				if(plugin.loc.containsKey(c)){
+					String warp = plugin.loc.get(c);
+					if(plugin.isDebug()){
+						System.out.println("[Sortal - Debug] Found it, warp=" + warp);
+					}
+					if(!plugin.warp.containsKey(warp)){
+						if(plugin.isDebug()){
+							System.out.println("[Sortal - Debug] But that warp doesn't even exist O.o");
+						}
+						p.sendMessage("[Sortal] This sign pointer is broken! Ask an Admin to fix it!");
+						return;
+					}
+					Warp d = plugin.warp.get(warp);
+					if(!pay(p,d)){
+						return;
+					}
+					Location goo = new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch());
+					goo.getChunk().load();
+					if(d.getWorld().getName().equals(p.getWorld().getName())){
+						p.teleport(goo);
+					}else{
+						p.teleport(goo);
+						p.teleport(goo);
+					}
+					p.sendMessage("You teleported to " + ChatColor.RED +  warp + "!");
+				}
+
+
 			}
 			if(!event.getPlayer().hasPermission("sortal.warp")){
 				p.sendMessage(plugin.noPerm);
@@ -145,25 +166,40 @@ public class SPlayerListener implements Listener{
 
 	private boolean pay(Player p, int money) {
 		if(!plugin.useVault){
+			if(plugin.isDebug()){
+				System.out.println("[Sortal - Debug] Not using vault");
+			}
 			return true;
 		}
 		Economy econ;
 		RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
 		if(rsp == null){
+			if(plugin.isDebug()){
+				System.out.println("[Sortal - Debug] Can't find vault");
+			}
 			return true; //No Vault found
 		}
 		econ = rsp.getProvider();
 		if(econ == null){
+			if(plugin.isDebug()){
+				System.out.println("[Sortal - Debug] Can't find vault");
+			}
 			return true; //No Vault found
 		}
 		if(money == 0){
 			return true;
 		}
 		if(!econ.has(p.getName(), money)){
+			if(plugin.isDebug()){
+				System.out.println("[Sortal - Debug] Not enough money..");
+			}
 			return false;
 		}
 		econ.withdrawPlayer(p.getName(), money);
 		p.sendMessage("Withdrawing " + econ.format(money) + " from your account!");
+		if(plugin.isDebug()){
+			System.out.println("[Sortal - Debug] Payed - Warp power granted!");
+		}
 		return true;
 	}
 
