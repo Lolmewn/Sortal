@@ -44,126 +44,14 @@ public class SPlayerListener implements Listener{
 		if(b.getType() == Material.SIGN_POST || b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN){
 			Sign s = (Sign)b.getState();
 			String[] lines = s.getLines();
-			if(lines[0].equalsIgnoreCase(plugin.signContains) || lines[0].equalsIgnoreCase("[Sortal]")){
-				if(event.getPlayer().hasPermission("sortal.warp")){
-					String line2 = lines[1];
-					if(line2.startsWith("w:")){
-						String[] split = line2.split(":");
-						String warp = split[1];
-						if(!plugin.warp.containsKey(warp)){
-							p.sendMessage("This warp does not exist!");
-							return;
-						}
-						Warp d = plugin.warp.get(warp);
-						if(!pay(p, d)){
-							return;
-						}
-						d.getWorld().getChunkAt((int)d.getX(), (int)d.getZ()).load();
-						if(d.getWorld().equals(p.getLocation().getWorld())){
-							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch()));
-						}else{
-							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getX())); //teleport to that world --\/ Teleport to exact location
-							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch()));
-						}
-						p.sendMessage("You teleported to " + ChatColor.RED + d.warp() +"!");
-
-					}else{
-						if(line2.contains(",")){
-							Warp d = new Warp(plugin);
-							if(!pay(p,d)){
-								return;
-							}
-							String[] split = line2.split(",");
-							if(split.length == 3){
-								//No world specified, using Players World
-								if(isInt(split[0]) && isInt(split[1]) && isInt(split[2])){
-									int x = Integer.parseInt(split[0]);
-									int y = Integer.parseInt(split[1]);
-									int z = Integer.parseInt(split[2]);
-									Location loc = new Location(p.getWorld(), x, y, z, p.getLocation().getYaw(), p.getLocation().getPitch());
-									loc.getChunk().load();
-									p.teleport(loc);
-									p.sendMessage("You teleported to " + ChatColor.RED + line2 + "!");
-								}
-							}
-							if(split.length == 4){
-								//World specified. Probally.
-								if(isInt(split[3]) && isInt(split[1]) && isInt(split[2])){
-									int x = Integer.parseInt(split[1]);
-									int y = Integer.parseInt(split[2]);
-									int z = Integer.parseInt(split[3]);
-									World world = plugin.getServer().getWorld(split[0]);
-									Location loc = new Location(world, x, y, z, p.getLocation().getYaw(), p.getLocation().getPitch());
-									loc.getChunk().load();
-									p.teleport(loc);
-									p.sendMessage("You teleported to " + ChatColor.RED + line2 + "!");
-								}
-							}
-						}else{
-							//Has [Sortal], but not w: or a , in secondline.
-							p.sendMessage("[Sortal] There's something wrong with this sign..");
-						}
-					}
-				}else{
-					p.sendMessage(plugin.noPerm);
+			int sortalLine = - 1;
+			for(int i = 0; i < s.getLines().length; i++){
+				if(lines[i].equalsIgnoreCase("[Sortal]") || lines[i].equalsIgnoreCase(plugin.signContains)){
+					sortalLine = i;
 				}
-			}else if(lines[1].equalsIgnoreCase(plugin.signContains) || lines[1].equalsIgnoreCase("[sortal]")){
-				if(event.getPlayer().hasPermission("sortal.warp")){
-					String line2 = lines[2];
-					if(line2.startsWith("w:")){
-						String[] split = line2.split(":");
-						String warp = split[1];
-						if(!plugin.warp.containsKey(warp)){
-							p.sendMessage("This warp does not exist!");
-							return;
-						}
-						Warp d = plugin.warp.get(warp);
-						if(!pay(p,d)){
-							return;
-						}
-						d.getWorld().getChunkAt((int)d.getX(), (int)d.getZ()).load();
-						if(d.getWorld().equals(p.getLocation().getWorld())){
-							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch()));
-						}else{
-							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ()));
-							p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch()));
-						}
-						p.sendMessage("You teleported to " + ChatColor.RED + d.warp());
-					}else{
-						if(line2.contains(",")){
-							if(!pay(p, plugin.warpUsePrice)){
-								return;
-							}
-							String[] split = line2.split(",");
-							if(split.length == 3){
-								//No world specified, using Players World
-								if(isInt(split[0]) && isInt(split[1]) && isInt(split[2])){
-									int x = Integer.parseInt(split[0]);
-									int y = Integer.parseInt(split[1]);
-									int z = Integer.parseInt(split[2]);
-									Location loc = new Location(p.getWorld(), x, y, z, p.getLocation().getYaw(), p.getLocation().getPitch());
-									loc.getChunk().load();
-									p.teleport(loc);
-									p.sendMessage("You teleported to " + ChatColor.RED + line2 + "!");
-								}
-							}
-							if(split.length == 4){
-								//World specified. Probally.
-								if(isInt(split[3]) && isInt(split[1]) && isInt(split[2])){
-									int x = Integer.parseInt(split[1]);
-									int y = Integer.parseInt(split[2]);
-									int z = Integer.parseInt(split[3]);
-									World world = plugin.getServer().getWorld(split[0]);
-									Location loc = new Location(world, x, y, z, p.getLocation().getYaw(), p.getLocation().getPitch());
-									loc.getChunk().load();
-									p.teleport(loc);
-									p.sendMessage("You teleported to " + ChatColor.RED + line2 + "!");
-								}
-							}
-						}
-					}
-				}
-			}else{
+			}
+			if(sortalLine == -1){
+				//Always the possibility of a registered sign
 				if(event.getPlayer().hasPermission("sortal.warp")){
 					Location c = new Location(b.getWorld(), b.getX(), b.getY(), b.getZ());
 					if(plugin.loc.containsKey(c)){
@@ -187,6 +75,69 @@ public class SPlayerListener implements Listener{
 						p.sendMessage("You teleported to " + ChatColor.RED +  warp + "!");
 					}
 				}
+				return;
+			}
+			if(!event.getPlayer().hasPermission("sortal.warp")){
+				p.sendMessage(plugin.noPerm);
+				return;
+			}
+			String line2 = lines[sortalLine+1];
+			if(line2.startsWith("w:")){
+				String[] split = line2.split(":");
+				String warp = split[1];
+				if(!plugin.warp.containsKey(warp)){
+					p.sendMessage("This warp does not exist!");
+					return;
+				}
+				Warp d = plugin.warp.get(warp);
+				if(!pay(p, d)){
+					return;
+				}
+				d.getWorld().getChunkAt((int)d.getX(), (int)d.getZ()).load();
+				if(d.getWorld().equals(p.getLocation().getWorld())){
+					p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch()));
+				}else{
+					p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getX())); //teleport to that world --\/ Teleport to exact location
+					p.teleport(new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch()));
+				}
+				p.sendMessage("You teleported to " + ChatColor.RED + d.warp() +"!");
+
+			}else{
+				if(line2.contains(",")){
+					Warp d = new Warp(plugin);
+					if(!pay(p,d)){
+						return;
+					}
+					String[] split = line2.split(",");
+					if(split.length == 3){
+						//No world specified, using Players World
+						if(isInt(split[0]) && isInt(split[1]) && isInt(split[2])){
+							int x = Integer.parseInt(split[0]);
+							int y = Integer.parseInt(split[1]);
+							int z = Integer.parseInt(split[2]);
+							Location loc = new Location(p.getWorld(), x, y, z, p.getLocation().getYaw(), p.getLocation().getPitch());
+							loc.getChunk().load();
+							p.teleport(loc);
+							p.sendMessage("You teleported to " + ChatColor.RED + line2 + "!");
+						}
+					}
+					if(split.length == 4){
+						//World specified. Probally.
+						if(isInt(split[3]) && isInt(split[1]) && isInt(split[2])){
+							int x = Integer.parseInt(split[1]);
+							int y = Integer.parseInt(split[2]);
+							int z = Integer.parseInt(split[3]);
+							World world = plugin.getServer().getWorld(split[0]);
+							Location loc = new Location(world, x, y, z, p.getLocation().getYaw(), p.getLocation().getPitch());
+							loc.getChunk().load();
+							p.teleport(loc);
+							p.sendMessage("You teleported to " + ChatColor.RED + line2 + "!");
+						}
+					}
+				}else{
+					//Has [Sortal], but not w: or a , in secondline.
+					p.sendMessage("[Sortal] There's something wrong with this sign..");
+				}
 			}
 		}
 	}
@@ -200,19 +151,19 @@ public class SPlayerListener implements Listener{
 		if(rsp == null){
 			return true; //No Vault found
 		}
-        econ = rsp.getProvider();
-        if(econ == null){
-        	return true; //No Vault found
-        }
-        if(money == 0){
-        	return true;
-        }
-        if(!econ.has(p.getName(), money)){
-        	return false;
-        }
-        econ.withdrawPlayer(p.getName(), money);
-        p.sendMessage("Withdrawing " + econ.format(money) + " from your account!");
-        return true;
+		econ = rsp.getProvider();
+		if(econ == null){
+			return true; //No Vault found
+		}
+		if(money == 0){
+			return true;
+		}
+		if(!econ.has(p.getName(), money)){
+			return false;
+		}
+		econ.withdrawPlayer(p.getName(), money);
+		p.sendMessage("Withdrawing " + econ.format(money) + " from your account!");
+		return true;
 	}
 
 	public boolean isInt(String i){
@@ -318,7 +269,7 @@ public class SPlayerListener implements Listener{
 		return false;
 	}
 
-	
+
 	public boolean pay(Player p, Warp d) {
 		return this.pay(p, d.getCost());
 	}
