@@ -131,6 +131,9 @@ public class SPlayerListener implements Listener{
 						p.sendMessage("You teleported to " + ChatColor.RED + d.warp());
 					}else{
 						if(line2.contains(",")){
+							if(!pay(p, plugin.warpUsePrice)){
+								return;
+							}
 							String[] split = line2.split(",");
 							if(split.length == 3){
 								//No world specified, using Players World
@@ -186,6 +189,30 @@ public class SPlayerListener implements Listener{
 				}
 			}
 		}
+	}
+
+	private boolean pay(Player p, int money) {
+		if(!plugin.useVault){
+			return true;
+		}
+		Economy econ;
+		RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
+		if(rsp == null){
+			return true; //No Vault found
+		}
+        econ = rsp.getProvider();
+        if(econ == null){
+        	return true; //No Vault found
+        }
+        if(money == 0){
+        	return true;
+        }
+        if(!econ.has(p.getName(), money)){
+        	return false;
+        }
+        econ.withdrawPlayer(p.getName(), money);
+        p.sendMessage("Withdrawing " + econ.format(money) + " from your account!");
+        return true;
 	}
 
 	public boolean isInt(String i){
@@ -293,27 +320,6 @@ public class SPlayerListener implements Listener{
 
 	
 	public boolean pay(Player p, Warp d) {
-		if(!plugin.useVault){
-			return true;
-		}
-		Economy econ;
-		RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
-		if(rsp == null){
-			return true; //No Vault found
-		}
-        econ = rsp.getProvider();
-        if(econ == null){
-        	return true; //No Vault found
-        }
-        int money = d.getCost();
-        if(money == 0){
-        	return true;
-        }
-        if(!econ.has(p.getName(), money)){
-        	return false;
-        }
-        econ.withdrawPlayer(p.getName(), money);
-        p.sendMessage("Withdrawing " + econ.format(money) + " from your account!");
-        return true;
+		return this.pay(p, d.getCost());
 	}
 }
