@@ -47,7 +47,7 @@ public class SPlayerListener implements Listener{
 			}
 			Sign s = (Sign)b.getState();
 			String[] lines = s.getLines();
-			int sortalLine = - 1;
+			int sortalLine = -1;
 			for(int i = 0; i < s.getLines().length; i++){
 				if(lines[i].equalsIgnoreCase("[Sortal]") || lines[i].equalsIgnoreCase(plugin.signContains)){
 					sortalLine = i;
@@ -67,7 +67,7 @@ public class SPlayerListener implements Listener{
 					//It's a registered warp sign
 					if(!event.getPlayer().hasPermission("sortal.warp")){
 						if(plugin.isDebug()){
-							System.out.println("[Sortal - Debug] No perms.. aww");
+							System.out.println("[Sortal - Debug] No perms.. Needed perm: sortal.warp");
 						}
 						p.sendMessage(plugin.noPerm);
 						return;
@@ -100,6 +100,9 @@ public class SPlayerListener implements Listener{
 				return;
 			}
 			if(!event.getPlayer().hasPermission("sortal.warp")){
+				if(plugin.isDebug()){
+					System.out.println("[Sortal - Debug] No perms.. Needed perm: sortal.warp");
+				}
 				p.sendMessage(plugin.noPerm);
 				return;
 			}
@@ -109,10 +112,6 @@ public class SPlayerListener implements Listener{
 			}
 			if(line2.startsWith("w:")){
 				if(plugin.isDebug()){
-					if(plugin.isDebug()){
-						System.out.println("[Sortal - Debug] No perms.. aww");
-					}
-					p.sendMessage(plugin.noPerm);
 					System.out.println("[Sortal - Debug] Starts with w:");
 				}
 				String[] split = line2.split(":");
@@ -137,8 +136,7 @@ public class SPlayerListener implements Listener{
 				return;
 			}
 			if(line2.contains(",")){
-				Warp d = new Warp(plugin);
-				if(!pay(p,d)){
+				if(!pay(p,plugin.warpUsePrice)){
 					return;
 				}
 				String[] split = line2.split(",");
