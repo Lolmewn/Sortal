@@ -7,11 +7,6 @@
 	<packaging>jar</packaging>
 	<name>Sortal</name>
 	<url>http://metrics.griefcraft.com/plugin/Sortal</url>
-	<scm>
-		<connection>scm:git:git://github.com/Lolmen/Sortal.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/Lolmen/Sortal.git</developerConnection>
-		<url>https://github.com/Lolmen/Sortal</url>
-	</scm>
 	<repositories>
 		<repository>
 			<id>spout-repo</id>
@@ -31,8 +26,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.0.2</version>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -41,7 +36,7 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
-			<version>1.2.3-R0.2-SNAPSHOT</version>
+			<version>1.2.3-R0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>net.milkbowl</groupId>
