@@ -45,5 +45,5 @@ signContains: [Sortal]
     
 #Updating and current version#
 auto-update: true
-version: 4.10
+version: 4.91
 debug: false
