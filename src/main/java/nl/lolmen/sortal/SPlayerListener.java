@@ -61,7 +61,7 @@ public class SPlayerListener implements Listener{
 				//Always the possibility of a registered sign
 				Location c = new Location(b.getWorld(), b.getX(), b.getY(), b.getZ());
 				if(plugin.isDebug()){
-					System.out.println("[Sortal - Debug] looking up location: " + c.toString() + " or " + c);
+					System.out.println("[Sortal - Debug] looking up location: " + c);
 				}
 				if(plugin.loc.containsKey(c)){
 					//It's a registered warp sign
@@ -70,6 +70,7 @@ public class SPlayerListener implements Listener{
 							System.out.println("[Sortal - Debug] No perms.. Needed perm: sortal.warp");
 						}
 						p.sendMessage(plugin.noPerm);
+						event.setCancelled(true);
 						return;
 					}
 					String warp = plugin.loc.get(c);
@@ -81,6 +82,7 @@ public class SPlayerListener implements Listener{
 							System.out.println("[Sortal - Debug] But that warp doesn't even exist O.o");
 						}
 						p.sendMessage("[Sortal] This sign pointer is broken! Ask an Admin to fix it!");
+						event.setCancelled(true);
 						return;
 					}
 					Warp d = plugin.warp.get(warp);
@@ -104,6 +106,7 @@ public class SPlayerListener implements Listener{
 					System.out.println("[Sortal - Debug] No perms.. Needed perm: sortal.warp");
 				}
 				p.sendMessage(plugin.noPerm);
+				event.setCancelled(true);
 				return;
 			}
 			String line2 = (lines[sortalLine+1] == null ? "" : lines[sortalLine+1]);
@@ -118,10 +121,12 @@ public class SPlayerListener implements Listener{
 				String warp = split[1];
 				if(!plugin.warp.containsKey(warp)){
 					p.sendMessage("This warp does not exist!");
+					event.setCancelled(true);
 					return;
 				}
 				Warp d = plugin.warp.get(warp);
 				if(!pay(p, d)){
+					event.setCancelled(true);
 					return;
 				}
 				Location loc = new Location(d.getWorld(), d.getX(), d.getY(), d.getZ(), p.getLocation().getYaw(), p.getLocation().getPitch());
@@ -133,10 +138,12 @@ public class SPlayerListener implements Listener{
 					p.teleport(loc); //For some reason, you have to teleport twice to end up at the correct spot.
 				}
 				p.sendMessage("You teleported to " + ChatColor.RED + d.warp() +"!");
+				event.setCancelled(true);
 				return;
 			}
 			if(line2.contains(",")){
 				if(!pay(p,plugin.warpUsePrice)){
+					event.setCancelled(true);
 					return;
 				}
 				String[] split = line2.split(",");
@@ -165,6 +172,7 @@ public class SPlayerListener implements Listener{
 						p.sendMessage("You teleported to " + ChatColor.RED + line2 + "!");
 					}
 				}
+				event.setCancelled(true);
 				return;
 			}
 			//Has [Sortal], but not w: or a , in secondline.
