@@ -22,9 +22,15 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class SPlayerListener implements Listener{
-	public Main plugin;
+	
+	private Main plugin;
+	
 	public SPlayerListener(Main main){
 		plugin = main;
+	}
+	
+	private Main getPlugin(){
+		return this.plugin;
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -42,50 +48,50 @@ public class SPlayerListener implements Listener{
 		}
 		Block b = event.getClickedBlock();
 		if(b.getType() == Material.SIGN_POST || b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN){
-			if(plugin.isDebug()){
+			if(this.getPlugin().isDebug()){
 				System.out.println("[Sortal - Debug] Sign clicked");
 			}
 			Sign s = (Sign)b.getState();
 			String[] lines = s.getLines();
 			int sortalLine = -1;
 			for(int i = 0; i < s.getLines().length; i++){
-				if(lines[i].equalsIgnoreCase("[Sortal]") || lines[i].equalsIgnoreCase(plugin.signContains)){
+				if(lines[i].equalsIgnoreCase("[Sortal]") || lines[i].equalsIgnoreCase(this.getPlugin().signContains)){
 					sortalLine = i;
 					break; //returns at the first sign that has [Sortal] or signContains
 				}
 			}
-			if(plugin.isDebug()){
+			if(this.getPlugin().isDebug()){
 				System.out.println("[Sortal - Debug] Line with identifier: " + sortalLine);
 			}
 			if(sortalLine == -1){
 				//Always the possibility of a registered sign
 				Location c = new Location(b.getWorld(), b.getX(), b.getY(), b.getZ());
-				if(plugin.isDebug()){
+				if(this.getPlugin().isDebug()){
 					System.out.println("[Sortal - Debug] looking up location: " + c);
 				}
-				if(plugin.loc.containsKey(c)){
+				if(this.getPlugin().loc.containsKey(c)){
 					//It's a registered warp sign
 					if(!event.getPlayer().hasPermission("sortal.warp")){
-						if(plugin.isDebug()){
+						if(this.getPlugin().isDebug()){
 							System.out.println("[Sortal - Debug] No perms.. Needed perm: sortal.warp");
 						}
-						p.sendMessage(plugin.noPerm);
+						p.sendMessage(this.getPlugin().noPerm);
 						event.setCancelled(true);
 						return;
 					}
-					String warp = plugin.loc.get(c);
-					if(plugin.isDebug()){
+					String warp = this.getPlugin().loc.get(c);
+					if(this.getPlugin().isDebug()){
 						System.out.println("[Sortal - Debug] Found it, warp=" + warp);
 					}
-					if(!plugin.warp.containsKey(warp)){
-						if(plugin.isDebug()){
+					if(!this.getPlugin().warp.containsKey(warp)){
+						if(this.getPlugin().isDebug()){
 							System.out.println("[Sortal - Debug] But that warp doesn't even exist O.o");
 						}
 						p.sendMessage("[Sortal] This sign pointer is broken! Ask an Admin to fix it!");
 						event.setCancelled(true);
 						return;
 					}
-					Warp d = plugin.warp.get(warp);
+					Warp d = this.getPlugin().warp.get(warp);
 					if(!pay(p,d)){
 						return;
 					}
@@ -102,29 +108,29 @@ public class SPlayerListener implements Listener{
 				return;
 			}
 			if(!event.getPlayer().hasPermission("sortal.warp")){
-				if(plugin.isDebug()){
+				if(this.getPlugin().isDebug()){
 					System.out.println("[Sortal - Debug] No perms.. Needed perm: sortal.warp");
 				}
-				p.sendMessage(plugin.noPerm);
+				p.sendMessage(this.getPlugin().noPerm);
 				event.setCancelled(true);
 				return;
 			}
 			String line2 = (lines[sortalLine+1] == null ? "" : lines[sortalLine+1]);
-			if(plugin.isDebug()){
+			if(this.getPlugin().isDebug()){
 				System.out.println("[Sortal - Debug] line after that: " + line2);
 			}
 			if(line2.startsWith("w:")){
-				if(plugin.isDebug()){
+				if(this.getPlugin().isDebug()){
 					System.out.println("[Sortal - Debug] Starts with w:");
 				}
 				String[] split = line2.split(":");
 				String warp = split[1];
-				if(!plugin.warp.containsKey(warp)){
+				if(!this.getPlugin().warp.containsKey(warp)){
 					p.sendMessage("This warp does not exist!");
 					event.setCancelled(true);
 					return;
 				}
-				Warp d = plugin.warp.get(warp);
+				Warp d = this.getPlugin().warp.get(warp);
 				if(!pay(p, d)){
 					event.setCancelled(true);
 					return;
@@ -142,7 +148,7 @@ public class SPlayerListener implements Listener{
 				return;
 			}
 			if(line2.contains(",")){
-				if(!pay(p,plugin.warpUsePrice)){
+				if(!pay(p,this.getPlugin().warpUsePrice)){
 					event.setCancelled(true);
 					return;
 				}
@@ -165,7 +171,7 @@ public class SPlayerListener implements Listener{
 						int x = Integer.parseInt(split[1]);
 						int y = Integer.parseInt(split[2]);
 						int z = Integer.parseInt(split[3]);
-						World world = plugin.getServer().getWorld(split[0]);
+						World world = this.getPlugin().getServer().getWorld(split[0]);
 						Location loc = new Location(world, x, y, z, p.getLocation().getYaw(), p.getLocation().getPitch());
 						loc.getChunk().load();
 						p.teleport(loc);
@@ -181,23 +187,23 @@ public class SPlayerListener implements Listener{
 	}
 
 	private boolean pay(Player p, int money) {
-		if(!plugin.useVault){
-			if(plugin.isDebug()){
+		if(!this.getPlugin().useVault){
+			if(this.getPlugin().isDebug()){
 				System.out.println("[Sortal - Debug] Not using vault");
 			}
 			return true;
 		}
 		Economy econ;
-		RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
+		RegisteredServiceProvider<Economy> rsp = this.getPlugin().getServer().getServicesManager().getRegistration(Economy.class);
 		if(rsp == null){
-			if(plugin.isDebug()){
+			if(this.getPlugin().isDebug()){
 				System.out.println("[Sortal - Debug] Can't find vault");
 			}
 			return true; //No Vault found
 		}
 		econ = rsp.getProvider();
 		if(econ == null){
-			if(plugin.isDebug()){
+			if(this.getPlugin().isDebug()){
 				System.out.println("[Sortal - Debug] Can't find vault");
 			}
 			return true; //No Vault found
@@ -206,7 +212,7 @@ public class SPlayerListener implements Listener{
 			return true;
 		}
 		if(!econ.has(p.getName(), money)){
-			if(plugin.isDebug()){
+			if(this.getPlugin().isDebug()){
 				System.out.println("[Sortal - Debug] Not enough money..");
 			}
 			p.sendMessage("Sorry, but you don't have enough money to do this!");
@@ -215,7 +221,7 @@ public class SPlayerListener implements Listener{
 		}
 		econ.withdrawPlayer(p.getName(), money);
 		p.sendMessage("Withdrawing " + econ.format(money) + " from your account!");
-		if(plugin.isDebug()){
+		if(this.getPlugin().isDebug()){
 			System.out.println("[Sortal - Debug] Payed - Warp power granted!");
 		}
 		return true;
@@ -231,67 +237,67 @@ public class SPlayerListener implements Listener{
 	}
 
 	private boolean leftClick(Player p, Block b) {
-		if(plugin.register.containsKey(p)){
-			String warp = plugin.register.get(p);
+		if(this.getPlugin().register.containsKey(p)){
+			String warp = this.getPlugin().register.get(p);
 			try{
 				Properties prop = new Properties();
-				FileInputStream in = new FileInputStream(plugin.locs);
+				FileInputStream in = new FileInputStream(this.getPlugin().locs);
 				prop.load(in);
 				prop.setProperty(b.getWorld().getName() +"," +  Integer.toString(b.getX()) +"," + Integer.toString(b.getY()) + "," + Integer.toString(b.getZ()), warp);
-				FileOutputStream out = new FileOutputStream(plugin.locs);
+				FileOutputStream out = new FileOutputStream(this.getPlugin().locs);
 				prop.store(out, "[World],[X],[Y],[Z]=[Warpname]");
 				out.flush();
 				out.close();
 				in.close();
-				plugin.loc.put(b.getLocation(), warp);
+				this.getPlugin().loc.put(b.getLocation(), warp);
 			}catch(IOException e){
 				e.printStackTrace();
 			}
-			plugin.register.remove(p);
+			this.getPlugin().register.remove(p);
 			p.sendMessage("Registered!");
 			return true;
 		}
-		if(plugin.cost.containsKey(p)){
-			int cost = plugin.cost.get(p);
+		if(this.getPlugin().cost.containsKey(p)){
+			int cost = this.getPlugin().cost.get(p);
 			if(b.getType() == Material.SIGN_POST || b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN){
 				Sign s = (Sign)b.getState();
 				Location loc = b.getLocation();
-				if(plugin.loc.containsKey(loc)){
+				if(this.getPlugin().loc.containsKey(loc)){
 					//Sign is a registered one.
-					String warp = plugin.loc.get(loc);
-					if(plugin.warp.containsKey(warp)){
-						Warp d = plugin.warp.get(warp);
+					String warp = this.getPlugin().loc.get(loc);
+					if(this.getPlugin().warp.containsKey(warp)){
+						Warp d = this.getPlugin().warp.get(warp);
 						d.setCost(cost);
 						p.sendMessage("Cost set to " + ChatColor.RED + Integer.toString(cost) + "!");
-						plugin.cost.remove(p);
+						this.getPlugin().cost.remove(p);
 					}else{
 						p.sendMessage("This sign has been registered, but it's pointing to a non-existing warp!");
 					}
 				}else{
 					String[] lines = s.getLines();
-					if(lines[0].equalsIgnoreCase(plugin.signContains) || lines[0].equalsIgnoreCase("[Sortal]")){
+					if(lines[0].equalsIgnoreCase(this.getPlugin().signContains) || lines[0].equalsIgnoreCase("[Sortal]")){
 						String line2 = lines[1];
 						if(line2.contains("w:")){
 							String[] splot = line2.split(":");
 							String warp = splot[1];
-							Warp d = plugin.warp.get(warp);
+							Warp d = this.getPlugin().warp.get(warp);
 							d.setCost(cost);
 							p.sendMessage("Cost set to " + ChatColor.RED + Integer.toString(cost) + "!");
-							plugin.cost.remove(p);
+							this.getPlugin().cost.remove(p);
 						}
 					}else
-						if(lines[1].equalsIgnoreCase(plugin.signContains) || lines[1].equalsIgnoreCase("[Sortal]")){
+						if(lines[1].equalsIgnoreCase(this.getPlugin().signContains) || lines[1].equalsIgnoreCase("[Sortal]")){
 							String line2 = lines[2];
 							if(line2.contains("w:")){
 								String[] splot = line2.split(":");
 								String warp = splot[1];
-								if(!plugin.warp.containsKey(warp)){
+								if(!this.getPlugin().warp.containsKey(warp)){
 									p.sendMessage("This sign is pointing to " +ChatColor.RED +  warp +ChatColor.WHITE +  ", a non-existant warp!");
 								}
-								Warp d = plugin.warp.get(warp);
+								Warp d = this.getPlugin().warp.get(warp);
 								d.setCost(cost);
 								p.sendMessage("Cost set to " + ChatColor.RED + Integer.toString(cost) + "!");
-								plugin.cost.remove(p);
+								this.getPlugin().cost.remove(p);
 							}
 						}else{
 							p.sendMessage("This sign is not usable for setting a price!");
@@ -302,16 +308,16 @@ public class SPlayerListener implements Listener{
 			}
 			return true;
 		}
-		if(plugin.unreg.contains(p)){
-			if(plugin.loc.containsKey(b.getLocation())){
+		if(this.getPlugin().unreg.contains(p)){
+			if(this.getPlugin().loc.containsKey(b.getLocation())){
 				try {
 					Properties prop = new Properties();
-					prop.load(new FileInputStream(plugin.locs));
+					prop.load(new FileInputStream(this.getPlugin().locs));
 					prop.remove(b.getLocation());
-					prop.store(new FileOutputStream(plugin.locs), "[Location] = [Name]");
+					prop.store(new FileOutputStream(this.getPlugin().locs), "[Location] = [Name]");
 					p.sendMessage("Deletion completed!");
-					plugin.unreg.remove(p);
-					plugin.loc.remove(b.getLocation());
+					this.getPlugin().unreg.remove(p);
+					this.getPlugin().loc.remove(b.getLocation());
 				} catch (Exception e) {
 					e.printStackTrace();
 					p.sendMessage("Something went wrong while deleting the warp. :O");

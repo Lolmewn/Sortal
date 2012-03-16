@@ -252,8 +252,10 @@ public class Main extends JavaPlugin{
 						continue;
 					}else{
 						this.log.info("Sign pointing to " + warp + " could not be loaded : Integers are off, length = 4!");
+						continue;
 					}
 				}
+				this.log.info("Sign " + warp + " couldn't be loaded, data offset weird");
 			}
 			in1.close();
 			this.log.info(Integer.toString(this.loc.size()) + " signs loaded!");
@@ -299,8 +301,11 @@ public class Main extends JavaPlugin{
 						if(this.showLoaded){
 							this.log.info("Warp " + warp + " loaded!");
 						}
+						if(this.debug){
+							this.log.info("[Sortal - Debug] Warp " + warp + " loaded with x=" + x + ",y=" + y + ",z=" + z + ",world=" + wname + ",money=" + money);
+						}
 					}else{
-						this.log.info("A Warp couldn't be loaded: " + warp);
+						this.log.info("A Warp couldn't be loaded: " + warp + ", data offset weird");
 					}
 				}
 			}
