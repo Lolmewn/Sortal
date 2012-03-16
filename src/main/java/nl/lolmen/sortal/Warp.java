@@ -108,7 +108,7 @@ public class Warp{
 				FileOutputStream out = new FileOutputStream(warps);
 				prop.store(out, "[WarpName]=[World],[X],[Y],[Z]");
 				this.plugin.warp.remove(this.warp);
-				this.plugin.warp.put(this.warp, new Warp(this.plugin, this.warp, new Location(this.getWorld(), this.getX(), this.getY(), this.getZ()), this.cost));
+				this.plugin.warp.put(this.warp, this);
 				out.flush();
 				out.close();
 				in.close();
