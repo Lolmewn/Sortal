@@ -1,8 +1,0 @@
-name: Sortal
-main: nl.lolmen.sortal.Main
-version: 4.3
-description: Make Sign Portals!
-commands:
-  sortal:
-    usage: /<command>
-    description: All Sortal commands!
