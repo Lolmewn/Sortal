@@ -201,6 +201,8 @@ public class SPlayerListener implements Listener{
 			if(plugin.isDebug()){
 				System.out.println("[Sortal - Debug] Not enough money..");
 			}
+			p.sendMessage("Sorry, but you don't have enough money to do this!");
+			p.sendMessage("Money needed: " + econ.format(money));
 			return false;
 		}
 		econ.withdrawPlayer(p.getName(), money);
