@@ -96,10 +96,12 @@ public class Warp{
 	}
 	public boolean setCost(int cost){
 		try{
+			this.cost = cost;
 			if(!this.warps.exists()){
 				this.warps.createNewFile();
 				return false;
 			}
+			
 			Properties prop = new Properties();
 			FileInputStream in = new FileInputStream(warps);
 			prop.load(in);
