@@ -257,17 +257,15 @@ public class Metrics {
 
         if (response.startsWith("ERR")) {
             throw new IOException(response); //Throw the exception
-        } else {
-            // Is this the first update this hour?
-            if (response.contains("OK This is your first update this hour")) {
-                if (plotters != null) {
-                    for (Plotter plotter : plotters) {
-                        plotter.reset();
-                    }
-                }
-            }
         }
-        //if (response.startsWith("OK")) - We should get "OK" followed by an optional description if everything goes right
+		// Is this the first update this hour?
+		if (response.contains("OK This is your first update this hour")) {
+		    if (plotters != null) {
+		        for (Plotter plotter : plotters) {
+		            plotter.reset();
+		        }
+		    }
+		}
     }
 
     /**

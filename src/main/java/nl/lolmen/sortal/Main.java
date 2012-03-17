@@ -78,6 +78,7 @@ public class Main extends JavaPlugin{
 	private double end;
 	private boolean debug;
 
+	@Override
 	public void onDisable() {
 		this.saveLocations();
 		if(this.updateAvailable){
@@ -136,6 +137,7 @@ public class Main extends JavaPlugin{
 		}
 	}
 
+	@Override
 	public void onEnable() {
 		this.start = System.nanoTime();
 		this.log = this.getLogger();
@@ -232,10 +234,9 @@ public class Main extends JavaPlugin{
 							this.log.info("Sign pointing to " + warp + " loaded!");
 						}
 						continue;
-					}else{
-						this.log.info("Sign pointing to " + warp + " could not be loaded : Integers are off, length = 3!");
-						continue;
 					}
+					this.log.info("Sign pointing to " + warp + " could not be loaded : Integers are off, length = 3!");
+					continue;
 				}
 				if(rest.length == 4){
 					if(isInt(rest[0]) && isInt(rest[1]) && isInt(rest[2])){
@@ -285,28 +286,27 @@ public class Main extends JavaPlugin{
 				if(isInt(restsplit[0])){
 					this.log.info("You seem to have an old version of warps.txt! Please use the following system: WARP=WORLD,X,Y,Z,PRICE!");
 					continue;
-				}else{
-					if(restsplit.length >= 4){
-						String wname = restsplit[0];
-						double x = Double.parseDouble(restsplit[1]);
-						double y = Double.parseDouble(restsplit[2]);
-						double z = Double.parseDouble(restsplit[3]);
-						int money;
-						if(restsplit.length == 5){
-							money = Integer.parseInt(restsplit[4]);
-						}else{
-							money = this.warpUsePrice;
-						}
-						this.warp.put(warp, new Warp(this, warp, getServer().getWorld(wname), x, y, z, money));
-						if(this.showLoaded){
-							this.log.info("Warp " + warp + " loaded!");
-						}
-						if(this.debug){
-							this.log.info("[Sortal - Debug] Warp " + warp + " loaded with x=" + x + ",y=" + y + ",z=" + z + ",world=" + wname + ",money=" + money);
-						}
+				}
+				if(restsplit.length >= 4){
+					String wname = restsplit[0];
+					double x = Double.parseDouble(restsplit[1]);
+					double y = Double.parseDouble(restsplit[2]);
+					double z = Double.parseDouble(restsplit[3]);
+					int money;
+					if(restsplit.length == 5){
+						money = Integer.parseInt(restsplit[4]);
 					}else{
-						this.log.info("A Warp couldn't be loaded: " + warp + ", data offset weird");
+						money = this.warpUsePrice;
 					}
+					this.warp.put(warp, new Warp(this, warp, getServer().getWorld(wname), x, y, z, money));
+					if(this.showLoaded){
+						this.log.info("Warp " + warp + " loaded!");
+					}
+					if(this.debug){
+						this.log.info("[Sortal - Debug] Warp " + warp + " loaded with x=" + x + ",y=" + y + ",z=" + z + ",world=" + wname + ",money=" + money);
+					}
+				}else{
+					this.log.info("A Warp couldn't be loaded: " + warp + ", data offset weird");
 				}
 			}
 			in1.close();
@@ -411,8 +411,9 @@ public class Main extends JavaPlugin{
 			return false;
 		}
 	}
-	public boolean onCommand(CommandSender sender, Command cmd, String s, String[] args){
-		if(s.equalsIgnoreCase("sortal")){
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, @SuppressWarnings("unused") String s, String[] args){
+		if(cmd.getName().equalsIgnoreCase("sortal")){
 			if(args.length == 0){
 				sender.sendMessage("======[Sortal]======");
 				sender.sendMessage("=Sign Based Teleportation=");
@@ -519,7 +520,7 @@ public class Main extends JavaPlugin{
 			}
 			if(args[0].equalsIgnoreCase("list")){
 				if(args.length == 1){
-					sender.sendMessage(ChatColor.GRAY + "Page 1/" + ((int)this.warp.size() / 9 + 1) + ChatColor.GREEN + " Warps: " + ChatColor.RED + Integer.toString(warp.size()));
+					sender.sendMessage(ChatColor.GRAY + "Page 1/" + (this.warp.size() / 9 + 1) + ChatColor.GREEN + " Warps: " + ChatColor.RED + Integer.toString(warp.size()));
 					int count = 1;
 					for(String entry: this.warp.keySet()){
 						if(count > 9){
@@ -535,11 +536,11 @@ public class Main extends JavaPlugin{
 					sender.sendMessage("Page must be Integer, not something else!");
 					return true;
 				}
-				if(Integer.parseInt(args[1]) > (int)(this.warp.size() / 9) + 1){
+				if(Integer.parseInt(args[1]) > (this.warp.size() / 9) + 1){
 					sender.sendMessage("No page " + args[1] + " available!");
 					return true;
 				}
-				sender.sendMessage(ChatColor.GRAY + "Page " + args[1] + "/" + ((int)this.warp.size() / 9 + 1) + ChatColor.GREEN + " Warps: " + ChatColor.RED + Integer.toString(warp.size()));
+				sender.sendMessage(ChatColor.GRAY + "Page " + args[1] + "/" + (this.warp.size() / 9 + 1) + ChatColor.GREEN + " Warps: " + ChatColor.RED + Integer.toString(warp.size()));
 				int count = 1;
 				for(String entry: this.warp.keySet()){
 					if(count >= 9 * Integer.parseInt(args[1])){
@@ -582,9 +583,9 @@ public class Main extends JavaPlugin{
 				}
 				if(args.length == 1){
 
-					if(this.register.containsKey((Player)sender)){
-						sender.sendMessage("No longer registering warp " + this.register.get((Player)sender));
-						this.register.remove(((Player)sender));
+					if(this.register.containsKey(sender)){
+						sender.sendMessage("No longer registering warp " + this.register.get(sender));
+						this.register.remove(sender);
 						return true;
 					}
 					sender.sendMessage("You must also give the warpname!");
@@ -607,9 +608,9 @@ public class Main extends JavaPlugin{
 					return true;
 				}
 				if(args.length == 1){
-					if(this.cost.containsKey((Player)sender)){
+					if(this.cost.containsKey(sender)){
 						sender.sendMessage("No longer setting a cost!");
-						this.cost.remove((Player)sender);
+						this.cost.remove(sender);
 						return true;
 					}
 					sender.sendMessage("You must also give a price!");

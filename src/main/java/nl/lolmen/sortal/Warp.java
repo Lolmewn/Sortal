@@ -126,9 +126,8 @@ public class Warp{
 	public int getCost(){
 		if(this.cost == 0){
 			return this.plugin.warpUsePrice;
-		}else{
-			return this.cost;
 		}
+		return this.cost;
 	}
 	public String warp(){
 		return this.warp;
@@ -145,6 +144,7 @@ public class Warp{
 	public double getZ(){
 		return this.z;
 	}
+	@Override
 	public String toString(){
 		return this.world.getName() + "," + Double.toString(this.x) + "," + Double.toString(this.y) + "," + Double.toString(this.z) + "," + (hasCost()?getCost():0);
 	}
